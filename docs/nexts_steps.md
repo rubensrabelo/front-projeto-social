@@ -3,8 +3,8 @@
 ## **Meta (17 a 23/11)**
 
 ### **1. Tela Inicial (Seleção de Perfil)**
-* [ ] Criar tela inicial permitindo escolher entre **Aluno**, **Professor** ou **Coordenador**
-* [ ] Implementar testes **unitários** e **de integração**
+* [x] Criar tela inicial permitindo escolher entre **Aluno**, **Professor** ou **Coordenador**
+* [x] Implementar testes **unitários** e **de integração**
 
 ---
 
