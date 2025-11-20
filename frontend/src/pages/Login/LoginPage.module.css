@@ -5,7 +5,7 @@
   background: #0A3D2E;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: raw;
   justify-content: center;
   align-items: center;
 
