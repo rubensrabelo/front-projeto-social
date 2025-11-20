@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 
 import styles from "./LoginPage.module.css";
@@ -78,6 +78,19 @@ export default function Login() {
         <button className={styles.submitButton} onClick={handleSubmit}>
           Entrar
         </button>
+
+        {
+          type !== "aluno" 
+          &&
+          <>
+            <div className={styles.forgotPassword}>
+                <Link to={`/recover-password?type=${type}`}>
+                  Esqueceu sua senha?
+                </Link>
+            </div>
+          </>
+        }
+
       </div>
     </div>
   );

@@ -2,22 +2,32 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import Login from "../../../pages/Login/Login";
 
-vi.mock("react-router-dom", () => ({
-  useSearchParams: () => [
-    {
-      get: (key: string) => {
-        if (key === "type") return mockType;
-        return null;
-      },
-    },
-  ],
-}));
-
 let mockType: string | null = "aluno";
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual<any>("react-router-dom");
+
+  return {
+    ...actual,
+
+    useSearchParams: () => [
+      {
+        get: (key: string) => {
+          if (key === "type") return mockType;
+          return null;
+        },
+      },
+    ],
+
+    Link: ({ to, children }: any) => <a href={to}>{children}</a>,
+    useNavigate: () => vi.fn(),
+  };
+});
 
 const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
 describe("LoginPage", () => {
+
   beforeEach(() => {
     consoleSpy.mockClear();
   });
@@ -111,4 +121,34 @@ describe("LoginPage", () => {
       "1234"
     );
   });
+
+  test('mostra link "Esqueceu sua senha?" quando type=professor', () => {
+    mockType = "professor";
+
+    render(<Login />);
+
+    const link = screen.getByText("Esqueceu sua senha?");
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/recover-password?type=professor");
+  });
+
+  test('mostra link "Esqueceu sua senha?" quando type=coordenador', () => {
+    mockType = "coordenador";
+
+    render(<Login />);
+
+    const link = screen.getByText("Esqueceu sua senha?");
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/recover-password?type=coordenador");
+  });
+
+  test('NÃO mostra link "Esqueceu sua senha?" quando type=aluno', () => {
+    mockType = "aluno";
+
+    render(<Login />);
+
+    const link = screen.queryByText("Esqueceu sua senha?");
+    expect(link).toBeNull();
+  });
+
 });

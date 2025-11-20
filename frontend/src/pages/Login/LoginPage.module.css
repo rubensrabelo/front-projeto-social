@@ -2,7 +2,7 @@
   width: 100%;
   height: 100vh;
 
-  background: #0A3D2E;
+  background: #004940;
 
   display: flex;
   flex-direction: raw;
@@ -69,3 +69,19 @@
 .submitButton:active {
   transform: scale(0.97);
 }
+
+.forgotPassword {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.forgotPassword a {
+  color: #0055ff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.forgotPassword a:hover {
+  text-decoration: underline;
+}
+
