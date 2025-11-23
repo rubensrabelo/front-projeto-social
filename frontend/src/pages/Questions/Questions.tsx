@@ -21,22 +21,16 @@ export default function Questions() {
       year: "2024",
       bimester: "1º",
       title: "Funções Afim",
+      statement: "Explique o comportamento da função afim.",
       subject: "Matemática",
-      type: "",
-    },
-    {
-      id: 2,
-      year: "2023",
-      bimester: "3º",
-      title: "Fotossíntese",
-      subject: "Biologia",
-      type: "",
+      type: "multiple",
     },
   ]);
 
   const emptyQuestion: Question = {
     id: null,
     title: "",
+    statement: "",
     year: "",
     bimester: "",
     subject: "",
@@ -50,7 +44,13 @@ export default function Questions() {
   const [newQuestion, setNewQuestion] = useState<Question>(emptyQuestion);
 
   const handleCreate = () => {
-    if (!newQuestion.title || !newQuestion.year || !newQuestion.bimester || !newQuestion.subject) {
+    if (
+      !newQuestion.title ||
+      !newQuestion.statement ||
+      !newQuestion.year ||
+      !newQuestion.bimester ||
+      !newQuestion.subject
+    ) {
       alert("Preencha todos os campos.");
       return;
     }
@@ -89,13 +89,20 @@ export default function Questions() {
 
   return (
     <div className={styles.container}>
-      <button className={styles.backBtn} onClick={() => navigate("/home?type=professor")}>
+      <button
+        className={styles.backBtn}
+        onClick={() => navigate("/home?type=professor")}
+      >
         ⬅ Voltar
       </button>
 
       <h1 className={styles.title}>Gerenciar Questões</h1>
 
-      <QuestionsFilters filters={filters} setFilters={setFilters} openCreateForm={() => setCreating(true)} />
+      <QuestionsFilters
+        filters={filters}
+        setFilters={setFilters}
+        openCreateForm={() => setCreating(true)}
+      />
 
       {creating && (
         <QuestionCreateForm

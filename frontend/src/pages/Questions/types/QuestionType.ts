@@ -8,6 +8,7 @@ export interface QuestionOptions {
 export interface Question {
   id?: number | null;
   title: string;
+  statement: string;
   year: string;
   bimester: string;
   subject: string;

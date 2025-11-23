@@ -82,7 +82,7 @@
 
 .modalBox {
   background: #ffffff;
-  padding: 0;
+  padding: 10px;
   border-radius: 20px;
   width: 520px;
   max-height: 85vh;
@@ -216,6 +216,7 @@
   background: #ffcf3a;
   border: none;
   padding: 8px 16px;
+  margin-right: 2.5px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
@@ -230,6 +231,7 @@
   background: #e04643;
   border: none;
   padding: 8px 16px;
+  margin-left: 2.5px;
   border-radius: 8px;
   color: white;
   cursor: pointer;

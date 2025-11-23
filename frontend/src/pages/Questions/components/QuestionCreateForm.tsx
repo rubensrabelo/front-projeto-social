@@ -23,6 +23,7 @@ export default function QuestionCreateForm({
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalBox}>
+
         <div className={styles.modalScroll}>
           <h2 className={styles.modalTitle}>
             {isEdit ? "Editar Questão" : "Criar Nova Questão"}
@@ -33,6 +34,13 @@ export default function QuestionCreateForm({
             placeholder="Título"
             value={newQuestion.title}
             onChange={(e) => update("title", e.target.value)}
+          />
+
+          <textarea
+            className={styles.textarea}
+            placeholder="Enunciado da questão"
+            value={newQuestion.statement}
+            onChange={(e) => update("statement", e.target.value)}
           />
 
           <select
@@ -88,12 +96,7 @@ export default function QuestionCreateForm({
                   value={newQuestion.options?.[opt as "A" | "B" | "C" | "D"] ?? ""}
                   onChange={(e) =>
                     update("options", {
-                      ...(newQuestion.options ?? {
-                        A: "",
-                        B: "",
-                        C: "",
-                        D: "",
-                      }),
+                      ...(newQuestion.options ?? { A: "", B: "", C: "", D: "" }),
                       [opt]: e.target.value,
                     })
                   }
