@@ -5,6 +5,7 @@ import styles from "./Questions.module.css";
 import QuestionsFilters from "./components/QuestionsFilters";
 import QuestionCreateForm from "./components/QuestionCreateForm";
 import QuestionsTable from "./components/QuestionsTable";
+import type { Question } from "./types/QuestionType";
 
 export default function Questions() {
   const navigate = useNavigate();
@@ -14,20 +15,39 @@ export default function Questions() {
   const [editing, setEditing] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
 
-
-  const [questions, setQuestions] = useState([
-    { id: 1, year: "2024", bimester: "1º", title: "Funções Afim", subject: "Matemática" },
-    { id: 2, year: "2023", bimester: "3º", title: "Fotossíntese", subject: "Biologia" },
+  const [questions, setQuestions] = useState<Question[]>([
+    {
+      id: 1,
+      year: "2024",
+      bimester: "1º",
+      title: "Funções Afim",
+      subject: "Matemática",
+      type: "",
+    },
+    {
+      id: 2,
+      year: "2023",
+      bimester: "3º",
+      title: "Fotossíntese",
+      subject: "Biologia",
+      type: "",
+    },
   ]);
 
-  const [creating, setCreating] = useState(false);
-
-  const [newQuestion, setNewQuestion] = useState({
+  const emptyQuestion: Question = {
+    id: null,
     title: "",
     year: "",
     bimester: "",
     subject: "",
-  });
+    type: "",
+    options: { A: "", B: "", C: "", D: "" },
+    correct: "",
+    answer: "",
+  };
+
+  const [creating, setCreating] = useState(false);
+  const [newQuestion, setNewQuestion] = useState<Question>(emptyQuestion);
 
   const handleCreate = () => {
     if (!newQuestion.title || !newQuestion.year || !newQuestion.bimester || !newQuestion.subject) {
@@ -35,31 +55,36 @@ export default function Questions() {
       return;
     }
 
-    const newQ = { id: questions.length + 1, ...newQuestion };
-    setQuestions([...questions, newQ]);
+    const newQ: Question = {
+      ...newQuestion,
+      id: questions.length + 1,
+    };
 
+    setQuestions([...questions, newQ]);
+    setNewQuestion(emptyQuestion);
     setCreating(false);
-    setNewQuestion({ title: "", year: "", bimester: "", subject: "" });
   };
 
-  const startEdit = (question: any) => {
-    setNewQuestion(question);
-    setEditId(question.id);
+  const startEdit = (q: Question) => {
+    setNewQuestion({ ...q });
+    setEditId(q.id ?? null);
     setEditing(true);
   };
 
   const handleEdit = () => {
+    if (!editId) return;
+
     setQuestions((prev) =>
-      prev.map((q) => (q.id === editId ? { ...q, ...newQuestion } : q))
+      prev.map((q) => (q.id === editId ? { ...newQuestion, id: editId } : q))
     );
 
+    setNewQuestion(emptyQuestion);
     setEditing(false);
     setEditId(null);
-    setNewQuestion({ title: "", year: "", bimester: "", subject: "" });
   };
 
   const handleDelete = (id: number) => {
-    setQuestions(questions.filter((q) => q.id !== id));
+    setQuestions((prev) => prev.filter((q) => q.id !== id));
   };
 
   return (
@@ -70,11 +95,7 @@ export default function Questions() {
 
       <h1 className={styles.title}>Gerenciar Questões</h1>
 
-      <QuestionsFilters
-        filters={filters}
-        setFilters={setFilters}
-        openCreateForm={() => setCreating(true)}
-      />
+      <QuestionsFilters filters={filters} setFilters={setFilters} openCreateForm={() => setCreating(true)} />
 
       {creating && (
         <QuestionCreateForm
@@ -91,7 +112,7 @@ export default function Questions() {
           setNewQuestion={setNewQuestion}
           handleCreate={handleEdit}
           close={() => setEditing(false)}
-          isEdit={true}
+          isEdit
         />
       )}
 
