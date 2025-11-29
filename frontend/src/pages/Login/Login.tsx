@@ -107,7 +107,7 @@ export default function Login() {
 
         {type !== "alunos" && (
           <div className={styles.forgotPassword}>
-            <Link to={`/recover-password?type=${type}`}>
+            <Link to={`/recuper_a_senha?type=${type}`}>
               Esqueceu sua senha?
             </Link>
           </div>

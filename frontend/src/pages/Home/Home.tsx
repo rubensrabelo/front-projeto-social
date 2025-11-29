@@ -35,7 +35,7 @@ export default function Home() {
             <CardOption
               title="Minhas Questões"
               image={questoes}
-              onClick={() => navigate("/questions")}
+              onClick={() => navigate("/banco_de_questoes")}
             />
 
             <CardOption

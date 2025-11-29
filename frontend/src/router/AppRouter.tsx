@@ -5,6 +5,7 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import Home from "../pages/Home/Home";
 import ProtectedLayout from "../Layout/ProtectedLayout";
 import Questions from "../pages/Questions/Questions";
+import QuestionBank from "../pages/QuestionBank/QuestionBank";
 
 function AppRouter() {
     return (
@@ -12,12 +13,13 @@ function AppRouter() {
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/recover-password" element={<ForgotPassword />} />
+                <Route path="/recuper_a_senha" element={<ForgotPassword />} />
 
 
                 <Route path="/" element={<ProtectedLayout />}>
                     <Route path="home" element={<Home />} />
-                    <Route path="questions" element={<Questions />} />
+                    <Route path="banco_de_questoes" element={<QuestionBank />} />
+                    <Route path="questoes" element={<Questions />} />
                 </Route>
             </Routes>
         </BrowserRouter>

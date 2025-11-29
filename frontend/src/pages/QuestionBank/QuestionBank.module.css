@@ -1,0 +1,102 @@
+.container {
+  background: #dff7e8;
+  min-height: 100vh;
+  padding: 40px 30px;
+  font-family: "Poppins", Arial, sans-serif;
+}
+
+.title {
+  font-size: 32px;
+  margin-bottom: 28px;
+  color: #024e45;
+  font-weight: 700;
+}
+
+.createBtn {
+  background: #004940;
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.createBtn:hover {
+  background: #1b876c;
+}
+
+.list {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bankCard {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #cde5d7;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalBox {
+  background: #fff;
+  width: 420px;
+  padding: 20px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modalTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #024e45;
+  margin-bottom: 6px;
+}
+
+.modalBox input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #c8dfd4;
+  background: #f6fcf9;
+  outline: none;
+  font-size: 14px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modalCancel {
+  background: #ccc;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+}
+
+.modalSave {
+  background: #004940;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}

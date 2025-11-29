@@ -93,7 +93,7 @@ export default function Questions() {
     <div className={styles.container}>
       <button
         className={styles.backBtn}
-        onClick={() => navigate("/home?type=professor")}
+        onClick={() => navigate("/banco_de_questoes")}
       >
         ⬅ Voltar
       </button>
