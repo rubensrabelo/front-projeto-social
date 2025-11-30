@@ -19,7 +19,7 @@ export default function QuestionsTable({ questions, onEdit, onDelete }: any) {
             <td>{q.nivel_de_dificuldade}</td>
             <td>
               <button onClick={onEdit}>Editar</button>
-              <button onClick={onDelete} className={styles.deleteBtn}>Excluir</button>
+              <button onClick={() => onDelete(q)} className={styles.deleteBtn}>Excluir</button>
             </td>
           </tr>
         ))}

@@ -9,6 +9,8 @@ import type { Question } from "./types/QuestionType";
 import styles from "./Questions.module.css";
 import { GetAllQuestionService } from "../../api/services/questions/GetAllQuestionService";
 import { CreateQuestionService } from "../../api/services/questions/CreateQuestionService";
+import { DeleteQuestionService } from "../../api/services/questions/DeletelQuestionService";
+import ConfirmDialog from "./components/ConfirmDialog";
 
 export default function Questions() {
   const navigate = useNavigate();
@@ -34,6 +36,8 @@ export default function Questions() {
   const [editing, setEditing] = useState(false);
 
   const [question, setQuestion] = useState<Question>(emptyQuestion);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [questionToDelete, setQuestionToDelete] = useState<Question | null>(null);
 
   useEffect(() => {
     if (!bank) return;
@@ -51,7 +55,7 @@ export default function Questions() {
     const payload = { ...question, banco_questao_id: bank.id };
 
     await CreateQuestionService(bank.professor_id, bank.id, payload);
-    
+
     const result = await GetAllQuestionService(bank.professor_id, bank.id);
     setQuestions(result);
 
@@ -63,9 +67,30 @@ export default function Questions() {
     alert("Edição habilitada.");
   };
 
-  async function handleDelete() {
-    alert("Delete habilitado.");
-  };
+  function handleDelete(question: Question) {
+    setQuestionToDelete(question);
+    setConfirmOpen(true);
+  }
+
+  async function confirmDeletion() {
+    if (!questionToDelete) return;
+
+    try {
+      await DeleteQuestionService(
+        bank.professor_id,
+        Number(questionToDelete.id)
+      );
+
+      setQuestions(prev => prev.filter(q => q.id !== questionToDelete.id));
+    } catch (error) {
+      alert("Erro ao deletar questão!");
+      console.log(error);
+    }
+
+    setConfirmOpen(false);
+    setQuestionToDelete(null);
+  }
+
 
   return (
     <div className={styles.container}>
@@ -104,6 +129,15 @@ export default function Questions() {
           handleSubmit={handleEdit}
           close={() => setEditing(false)}
           isEdit
+        />
+      )}
+
+      {confirmOpen && (
+        <ConfirmDialog
+          title="Excluir questão"
+          message={`Tem certeza que deseja excluir a questão?\n\n"${questionToDelete?.enunciado}"`}
+          onConfirm={confirmDeletion}
+          onCancel={() => setConfirmOpen(false)}
         />
       )}
     </div>
