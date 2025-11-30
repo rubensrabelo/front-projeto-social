@@ -9,7 +9,7 @@ export default function QuestionBank() {
   const [form, setForm] = useState({
     bimestre: "",
     ano: "",
-    area: "",
+    area: "Matemática",
   });
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -42,7 +42,7 @@ export default function QuestionBank() {
 
       setBanks([...banks, newBank]);
       setCreating(false);
-      setForm({ bimestre: "", ano: "", area: "" });
+      setForm({ bimestre: "", ano: "", area: "Matemática" });
 
     } catch (err: any) {
       alert(err.message || "Erro ao criar banco.");
@@ -90,12 +90,15 @@ export default function QuestionBank() {
               onChange={handleChange}
             />
 
-            <input
+            <select
               name="area"
-              placeholder="Área"
               value={form.area}
               onChange={handleChange}
-            />
+            >
+              <option value="Matemática">Matemática</option>
+              <option value="Linguagens">Linguagens</option>
+              <option value="Técnicas">Técnicas</option>
+            </select>
 
             <div className={styles.modalActions}>
               <button className={styles.modalCancel} onClick={() => setCreating(false)}>
