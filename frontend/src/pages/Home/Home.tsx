@@ -41,7 +41,7 @@ export default function Home() {
             <CardOption
               title="Minhas Provas"
               image={provas}
-              onClick={() => navigate("/tests")}
+              onClick={() => navigate("/exams")}
             />
           </>
         )}
