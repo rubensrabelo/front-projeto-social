@@ -1,89 +1,79 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import styles from "./Questions.module.css";
 
-import QuestionsFilters from "./components/QuestionsFilters";
+
 import QuestionCreateForm from "./components/QuestionCreateForm";
 import QuestionsTable from "./components/QuestionsTable";
-import type { Question, QuestionPayload } from "./types/QuestionType";
+import type { Question } from "./types/QuestionType";
 
+import styles from "./Questions.module.css";
+import { getUserSession } from "../../utils/session/getUserSession";
 import { GetAllQuestionService } from "../../api/services/questions/GetAllQuestionService";
 import { CreateQuestionService } from "../../api/services/questions/CreateQuestionService";
 
 export default function Questions() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const bank = location.state?.bank;
+  const { state } = useLocation();  
+  const bank = state?.bank;
 
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const user = getUserSession();
 
   const emptyQuestion: Question = {
     id: null,
-    statement: "",
-    subject: "",
-    difficulty: "",
-    correct: "",
-    options: { A: "", B: "", C: "", D: "", E: "" }
+    enunciado: "",
+    alternativa_a: "",
+    alternativa_b: "",
+    alternativa_c: "",
+    alternativa_d: "",
+    alternativa_e: "",
+    materia: "",
+    correta: "",
+    banco_questao_id: bank?.id ?? 0,
+    nivel_de_dificuldade: ""
   };
 
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [creating, setCreating] = useState(false);
-  const [newQuestion, setNewQuestion] = useState<Question>(emptyQuestion);
+  const [editing, setEditing] = useState(false);
+
+  const [question, setQuestion] = useState<Question>(emptyQuestion);
 
   useEffect(() => {
-    async function load() {
-      if (!bank) return;
+    if (!bank || !user) return;
 
-      try {
-        const result = await GetAllQuestionService(
-          String(bank.professor_id),
-          Number(bank.id)
-        );
-        setQuestions(result);
-      } catch (e) {
-        alert("Erro ao carregar questões.");
-      }
-    }
-    load();
+    (async () => {
+      const result = await GetAllQuestionService(user.id, bank.id);
+      setQuestions(result);
+    })();
   }, [bank]);
 
   const handleCreate = async () => {
-    if (
-      !newQuestion.statement ||
-      !newQuestion.subject ||
-      !newQuestion.correct ||
-      !newQuestion.difficulty
-    ) {
-      alert("Preencha todos os campos.");
-      return;
-    }
+    const payload = { ...question, banco_questao_id: bank.id };
 
-    const payload: QuestionPayload = {
-      enunciado: newQuestion.statement,
-      alternativa_a: newQuestion.options.A,
-      alternativa_b: newQuestion.options.B,
-      alternativa_c: newQuestion.options.C,
-      alternativa_d: newQuestion.options.D,
-      alternativa_e: newQuestion.options.E,
-      materia: newQuestion.subject,
-      correta: newQuestion.correct,
-      nivel_de_dificuldade: newQuestion.difficulty,
-      banco_questao_id: Number(bank.id)
-    };
+    const created = await CreateQuestionService(user.id, bank.id, payload);
+    setQuestions([...questions, created]);
 
-    try {
-      const created = await CreateQuestionService(
-        bank.professor_id,
-        Number(bank.id),
-        payload
-      );
-
-      setQuestions([...questions, created]);
-      setNewQuestion(emptyQuestion);
-      setCreating(false);
-    } catch (e: any) {
-      alert("Erro ao criar questão: " + e.message);
-    }
+    setQuestion(emptyQuestion);
+    setCreating(false);
   };
+
+  // const handleEdit = async () => {
+  //   if (!question.id) return;
+
+  //   const updated = await UpdateQuestionService(question.id, question);
+
+  //   setQuestions((prev) =>
+  //     prev.map((q) => (q.id === question.id ? updated : q))
+  //   );
+
+  //   setQuestion(emptyQuestion);
+  //   setEditing(false);
+  // };
+
+  // const handleDelete = async (id: number) => {
+  //   await DeleteQuestionService(id);
+  //   setQuestions((prev) => prev.filter((q) => q.id !== id));
+  // };
 
   return (
     <div className={styles.container}>
@@ -94,24 +84,39 @@ export default function Questions() {
         ⬅ Voltar
       </button>
 
-      <h1 className={styles.title}>Gerenciar Questões</h1>
+      <h1>Gerenciar Questões</h1>
 
-      <QuestionsFilters
-        filters={{}}
-        setFilters={() => {}}
-        openCreateForm={() => setCreating(true)}
+      <button className={styles.createBtn} onClick={() => setCreating(true)}>
+        + Criar Questão
+      </button>
+
+      <QuestionsTable
+        questions={questions}
+        // onEdit={(q) => {
+        //   setQuestion(q);
+        //   setEditing(true);
+        // }}
+        // onDelete={handleDelete}
       />
 
       {creating && (
         <QuestionCreateForm
-          newQuestion={newQuestion}
-          setNewQuestion={setNewQuestion}
-          handleCreate={handleCreate}
+          question={question}
+          setQuestion={setQuestion}
+          handleSubmit={handleCreate}
           close={() => setCreating(false)}
         />
       )}
 
-      <QuestionsTable questions={questions} handleDelete={() => {}} startEdit={() => {}} />
+      {editing && (
+        <QuestionCreateForm
+          question={question}
+          setQuestion={setQuestion}
+          // handleSubmit={handleEdit}
+          close={() => setEditing(false)}
+          isEdit
+        />
+      )}
     </div>
   );
 }

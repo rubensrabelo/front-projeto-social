@@ -1,96 +1,119 @@
 import styles from "../Questions.module.css";
-import type { Question } from "../types/QuestionType";
-
-interface Props {
-  newQuestion: Question;
-  setNewQuestion: (v: Question) => void;
-  handleCreate: () => void;
-  close: () => void;
-}
 
 export default function QuestionCreateForm({
-  newQuestion,
-  setNewQuestion,
-  handleCreate,
-  close
-}: Props) {
-  const update = (field: keyof Question, value: any) => {
-    setNewQuestion({ ...newQuestion, [field]: value });
-  };
-
+  question,
+  setQuestion,
+  handleSubmit,
+  close,
+  isEdit = false
+}: any) {
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalBox}>
-        <div className={styles.modalScroll}>
-          <h2 className={styles.modalTitle}>Criar Nova Questão</h2>
+    <div className={styles.formOverlay}>
+      <div className={styles.formContainer}>
+        <h2>{isEdit ? "Editar Questão" : "Criar Questão"}</h2>
 
-          <textarea
-            className={styles.textarea}
-            placeholder="Enunciado da questão"
-            value={newQuestion.statement}
-            onChange={(e) => update("statement", e.target.value)}
-          />
+        {/* ENUNCIADO */}
+        <textarea
+          className={styles.textarea}
+          placeholder="Enunciado da questão..."
+          value={question.enunciado}
+          onChange={(e) =>
+            setQuestion({ ...question, enunciado: e.target.value })
+          }
+        />
 
-          <select
-            value={newQuestion.subject}
-            onChange={(e) => update("subject", e.target.value)}
-          >
-            <option value="">Disciplina</option>
-            <option value="Português">Português</option>
-            <option value="Matemática">Matemática</option>
-            <option value="Biologia">Biologia</option>
-            <option value="História">História</option>
-            <option value="Geografia">Geografia</option>
-          </select>
+        {/* ALTERNATIVAS */}
+        <input
+          placeholder="Alternativa A"
+          value={question.alternativa_a}
+          onChange={(e) =>
+            setQuestion({ ...question, alternativa_a: e.target.value })
+          }
+        />
 
-          <select
-            value={newQuestion.difficulty}
-            onChange={(e) => update("difficulty", e.target.value)}
-          >
-            <option value="">Nível de dificuldade</option>
-            <option value="Fácil">Fácil</option>
-            <option value="Médio">Médio</option>
-            <option value="Difícil">Difícil</option>
-          </select>
+        <input
+          placeholder="Alternativa B"
+          value={question.alternativa_b}
+          onChange={(e) =>
+            setQuestion({ ...question, alternativa_b: e.target.value })
+          }
+        />
 
-          <div className={styles.multipleBox}>
-            <h4>Alternativas</h4>
+        <input
+          placeholder="Alternativa C"
+          value={question.alternativa_c}
+          onChange={(e) =>
+            setQuestion({ ...question, alternativa_c: e.target.value })
+          }
+        />
 
-            {["A", "B", "C", "D", "E"].map((opt) => (
-              <input
-                key={opt}
-                type="text"
-                placeholder={`Alternativa ${opt}`}
-                value={newQuestion.options[opt]}
-                onChange={(e) =>
-                  update("options", {
-                    ...newQuestion.options,
-                    [opt]: e.target.value
-                  })
-                }
-              />
-            ))}
+        <input
+          placeholder="Alternativa D"
+          value={question.alternativa_d}
+          onChange={(e) =>
+            setQuestion({ ...question, alternativa_d: e.target.value })
+          }
+        />
 
-            <select
-              value={newQuestion.correct}
-              onChange={(e) => update("correct", e.target.value)}
-            >
-              <option value="">Alternativa Correta</option>
-              {["A", "B", "C", "D", "E"].map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        <input
+          placeholder="Alternativa E"
+          value={question.alternativa_e}
+          onChange={(e) =>
+            setQuestion({ ...question, alternativa_e: e.target.value })
+          }
+        />
 
-        <div className={styles.modalActions}>
-          <button className={styles.modalCancel} onClick={close}>
-            Cancelar
+        {/* CORRETA */}
+        <select
+          value={question.correta}
+          onChange={(e) =>
+            setQuestion({ ...question, correta: e.target.value })
+          }
+        >
+          <option value="">Selecione a alternativa correta</option>
+          <option value="A">Alternativa A</option>
+          <option value="B">Alternativa B</option>
+          <option value="C">Alternativa C</option>
+          <option value="D">Alternativa D</option>
+          <option value="E">Alternativa E</option>
+        </select>
+
+        {/* MATÉRIA */}
+        <select
+          value={question.materia}
+          onChange={(e) =>
+            setQuestion({ ...question, materia: e.target.value })
+          }
+        >
+          <option value="">Selecione a Matéria</option>
+          <option value="Português">Português</option>
+          <option value="Matemática">Matemática</option>
+          <option value="Física">Física</option>
+          <option value="Química">Química</option>
+          <option value="História">História</option>
+          <option value="Geografia">Geografia</option>
+        </select>
+
+        {/* DIFICULDADE */}
+        <select
+          value={question.nivel_de_dificuldade}
+          onChange={(e) =>
+            setQuestion({ ...question, nivel_de_dificuldade: e.target.value })
+          }
+        >
+          <option value="">Nível de Dificuldade</option>
+          <option value="Fácil">Fácil</option>
+          <option value="Médio">Médio</option>
+          <option value="Difícil">Difícil</option>
+        </select>
+
+        {/* BOTÕES */}
+        <div className={styles.formButtons}>
+          <button onClick={handleSubmit}>
+            {isEdit ? "Salvar" : "Criar"}
           </button>
-          <button className={styles.modalSave} onClick={handleCreate}>
-            Salvar
+          <button className={styles.cancelBtn} onClick={close}>
+            Cancelar
           </button>
         </div>
       </div>
