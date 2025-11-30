@@ -1,105 +1,88 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Questions.module.css";
 
 import QuestionsFilters from "./components/QuestionsFilters";
 import QuestionCreateForm from "./components/QuestionCreateForm";
 import QuestionsTable from "./components/QuestionsTable";
-import type { Question } from "./types/QuestionType";
-import { GetAllQuestionService } from "../../api/services/questions/GetAllQuestionService";
-import { getUserSession } from "../../utils/session/getUserSession";
+import type { Question, QuestionPayload } from "./types/QuestionType";
 
+import { GetAllQuestionService } from "../../api/services/questions/GetAllQuestionService";
+import { CreateQuestionService } from "../../api/services/questions/CreateQuestionService";
 
 export default function Questions() {
   const navigate = useNavigate();
   const location = useLocation();
   const bank = location.state?.bank;
 
-  const [filters, setFilters] = useState({ year: "", area: "", subject: "" });
-
-  const [editing, setEditing] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
-
   const [questions, setQuestions] = useState<Question[]>([]);
 
   const emptyQuestion: Question = {
     id: null,
-    title: "",
     statement: "",
-    year: "",
-    bimester: "",
     subject: "",
-    type: "",
-    options: { A: "", B: "", C: "", D: "" },
+    difficulty: "",
     correct: "",
-    answer: "",
+    options: { A: "", B: "", C: "", D: "", E: "" }
   };
 
   const [creating, setCreating] = useState(false);
   const [newQuestion, setNewQuestion] = useState<Question>(emptyQuestion);
 
   useEffect(() => {
-    async function loadQuestions() {
-      try {
-        if(!bank) return;
+    async function load() {
+      if (!bank) return;
 
+      try {
         const result = await GetAllQuestionService(
           String(bank.professor_id),
           Number(bank.id)
         );
-
         setQuestions(result);
-      } catch (error) {
-        console.error(error);
-        alert("Erro ao carregar as questões.");
+      } catch (e) {
+        alert("Erro ao carregar questões.");
       }
     }
-
-    loadQuestions();
+    load();
   }, [bank]);
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (
-      !newQuestion.title ||
       !newQuestion.statement ||
-      !newQuestion.year ||
-      !newQuestion.bimester ||
-      !newQuestion.subject
+      !newQuestion.subject ||
+      !newQuestion.correct ||
+      !newQuestion.difficulty
     ) {
       alert("Preencha todos os campos.");
       return;
     }
 
-    const newQ: Question = {
-      ...newQuestion,
-      id: questions.length + 1,
+    const payload: QuestionPayload = {
+      enunciado: newQuestion.statement,
+      alternativa_a: newQuestion.options.A,
+      alternativa_b: newQuestion.options.B,
+      alternativa_c: newQuestion.options.C,
+      alternativa_d: newQuestion.options.D,
+      alternativa_e: newQuestion.options.E,
+      materia: newQuestion.subject,
+      correta: newQuestion.correct,
+      nivel_de_dificuldade: newQuestion.difficulty,
+      banco_questao_id: Number(bank.id)
     };
 
-    setQuestions([...questions, newQ]);
-    setNewQuestion(emptyQuestion);
-    setCreating(false);
-  };
+    try {
+      const created = await CreateQuestionService(
+        bank.professor_id,
+        Number(bank.id),
+        payload
+      );
 
-  const startEdit = (q: Question) => {
-    setNewQuestion({ ...q });
-    setEditId(q.id ?? null);
-    setEditing(true);
-  };
-
-  const handleEdit = () => {
-    if (!editId) return;
-
-    setQuestions((prev) =>
-      prev.map((q) => (q.id === editId ? { ...newQuestion, id: editId } : q))
-    );
-
-    setNewQuestion(emptyQuestion);
-    setEditing(false);
-    setEditId(null);
-  };
-
-  const handleDelete = (id: number) => {
-    setQuestions((prev) => prev.filter((q) => q.id !== id));
+      setQuestions([...questions, created]);
+      setNewQuestion(emptyQuestion);
+      setCreating(false);
+    } catch (e: any) {
+      alert("Erro ao criar questão: " + e.message);
+    }
   };
 
   return (
@@ -114,8 +97,8 @@ export default function Questions() {
       <h1 className={styles.title}>Gerenciar Questões</h1>
 
       <QuestionsFilters
-        filters={filters}
-        setFilters={setFilters}
+        filters={{}}
+        setFilters={() => {}}
         openCreateForm={() => setCreating(true)}
       />
 
@@ -128,21 +111,7 @@ export default function Questions() {
         />
       )}
 
-      {editing && (
-        <QuestionCreateForm
-          newQuestion={newQuestion}
-          setNewQuestion={setNewQuestion}
-          handleCreate={handleEdit}
-          close={() => setEditing(false)}
-          isEdit
-        />
-      )}
-
-      <QuestionsTable
-        questions={questions}
-        handleDelete={handleDelete}
-        startEdit={startEdit}
-      />
+      <QuestionsTable questions={questions} handleDelete={() => {}} startEdit={() => {}} />
     </div>
   );
 }
