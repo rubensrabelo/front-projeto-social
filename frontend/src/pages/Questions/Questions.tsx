@@ -7,16 +7,13 @@ import QuestionsTable from "./components/QuestionsTable";
 import type { Question } from "./types/QuestionType";
 
 import styles from "./Questions.module.css";
-import { getUserSession } from "../../utils/session/getUserSession";
 import { GetAllQuestionService } from "../../api/services/questions/GetAllQuestionService";
 import { CreateQuestionService } from "../../api/services/questions/CreateQuestionService";
 
 export default function Questions() {
   const navigate = useNavigate();
-  const { state } = useLocation();  
+  const { state } = useLocation();
   const bank = state?.bank;
-
-  const user = getUserSession();
 
   const emptyQuestion: Question = {
     id: null,
@@ -39,41 +36,36 @@ export default function Questions() {
   const [question, setQuestion] = useState<Question>(emptyQuestion);
 
   useEffect(() => {
-    if (!bank || !user) return;
+    if (!bank) return;
 
-    (async () => {
-      const result = await GetAllQuestionService(user.id, bank.id);
+    async function fetchData() {
+      const result = await GetAllQuestionService(bank.professor_id, bank.id);
       setQuestions(result);
-    })();
+    };
+
+    fetchData();
   }, [bank]);
 
-  const handleCreate = async () => {
+
+  async function handleCreate() {
     const payload = { ...question, banco_questao_id: bank.id };
 
-    const created = await CreateQuestionService(user.id, bank.id, payload);
-    setQuestions([...questions, created]);
+    await CreateQuestionService(bank.professor_id, bank.id, payload);
+    
+    const result = await GetAllQuestionService(bank.professor_id, bank.id);
+    setQuestions(result);
 
     setQuestion(emptyQuestion);
     setCreating(false);
   };
 
-  // const handleEdit = async () => {
-  //   if (!question.id) return;
+  async function handleEdit() {
+    alert("Edição habilitada.");
+  };
 
-  //   const updated = await UpdateQuestionService(question.id, question);
-
-  //   setQuestions((prev) =>
-  //     prev.map((q) => (q.id === question.id ? updated : q))
-  //   );
-
-  //   setQuestion(emptyQuestion);
-  //   setEditing(false);
-  // };
-
-  // const handleDelete = async (id: number) => {
-  //   await DeleteQuestionService(id);
-  //   setQuestions((prev) => prev.filter((q) => q.id !== id));
-  // };
+  async function handleDelete() {
+    alert("Delete habilitado.");
+  };
 
   return (
     <div className={styles.container}>
@@ -92,11 +84,8 @@ export default function Questions() {
 
       <QuestionsTable
         questions={questions}
-        // onEdit={(q) => {
-        //   setQuestion(q);
-        //   setEditing(true);
-        // }}
-        // onDelete={handleDelete}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
 
       {creating && (
@@ -112,7 +101,7 @@ export default function Questions() {
         <QuestionCreateForm
           question={question}
           setQuestion={setQuestion}
-          // handleSubmit={handleEdit}
+          handleSubmit={handleEdit}
           close={() => setEditing(false)}
           isEdit
         />

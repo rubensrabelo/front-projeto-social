@@ -12,7 +12,6 @@ export default function QuestionCreateForm({
       <div className={styles.formContainer}>
         <h2>{isEdit ? "Editar Questão" : "Criar Questão"}</h2>
 
-        {/* ENUNCIADO */}
         <textarea
           className={styles.textarea}
           placeholder="Enunciado da questão..."
@@ -22,7 +21,6 @@ export default function QuestionCreateForm({
           }
         />
 
-        {/* ALTERNATIVAS */}
         <input
           placeholder="Alternativa A"
           value={question.alternativa_a}
@@ -63,7 +61,6 @@ export default function QuestionCreateForm({
           }
         />
 
-        {/* CORRETA */}
         <select
           value={question.correta}
           onChange={(e) =>
@@ -78,7 +75,6 @@ export default function QuestionCreateForm({
           <option value="E">Alternativa E</option>
         </select>
 
-        {/* MATÉRIA */}
         <select
           value={question.materia}
           onChange={(e) =>
@@ -94,7 +90,6 @@ export default function QuestionCreateForm({
           <option value="Geografia">Geografia</option>
         </select>
 
-        {/* DIFICULDADE */}
         <select
           value={question.nivel_de_dificuldade}
           onChange={(e) =>
@@ -107,7 +102,6 @@ export default function QuestionCreateForm({
           <option value="Difícil">Difícil</option>
         </select>
 
-        {/* BOTÕES */}
         <div className={styles.formButtons}>
           <button onClick={handleSubmit}>
             {isEdit ? "Salvar" : "Criar"}
