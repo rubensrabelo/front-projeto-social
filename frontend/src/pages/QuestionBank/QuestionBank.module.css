@@ -40,6 +40,13 @@
   border-radius: 14px;
   border: 1px solid #c9e3d6;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.bankCard:hover {
+  transform: translateY(-3px);
+  border-color: #a9d2c4;
 }
 
 .modalOverlay {
@@ -81,6 +88,12 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.errorMessage {
+  color: #ff0000;
+  margin-top: 10px;
+  font-size: 14px;
 }
 
 .modalCancel {

@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./QuestionBank.module.css";
+
 import { createQuestionBank } from "../../api/services/QuestionBank/CreateQuestionBankService";
+import { GetAllQuestionBankService } from "../../api/services/QuestionBank/GetAllQuestionBankService";
+import QuestionBankCard from "./components/QuestionBankCard";
 
 export default function QuestionBank() {
   const [banks, setBanks] = useState<any[]>([]);
@@ -12,8 +16,29 @@ export default function QuestionBank() {
     area: "Matemática",
   });
 
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const id_professor = user?.id;
+
+  useEffect(() => {
+    async function loadBanks() {
+      try {
+        const data = await GetAllQuestionBankService(id_professor);
+        if (Array.isArray(data)) {
+          setBanks(data);
+        } else {
+          setBanks([]);
+          setError("Formato inesperado recebido do servidor.");
+        }
+      } catch (err: any) {
+        setError(err.message || "Erro ao carregar bancos.");
+      }
+    }
+    loadBanks();
+  }, [id_professor]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -22,7 +47,7 @@ export default function QuestionBank() {
 
   async function handleCreate() {
     if (!form.bimestre || !form.ano || !form.area) {
-      alert("Preencha todos os campos!");
+      setError("Preencha todos os campos!");
       return;
     }
 
@@ -30,23 +55,24 @@ export default function QuestionBank() {
       const body = {
         bimestre: Number(form.bimestre),
         ano: Number(form.ano),
-        area: form.area
+        area: form.area,
       };
 
-      await createQuestionBank(id_professor, body);
+      const created = await createQuestionBank(id_professor, body);
 
-      const newBank = {
-        id: banks.length + 1,
-        ...body
-      };
-
-      setBanks([...banks, newBank]);
+      setBanks((prev) => [...prev, created]);
       setCreating(false);
       setForm({ bimestre: "", ano: "", area: "Matemática" });
 
     } catch (err: any) {
-      alert(err.message || "Erro ao criar banco.");
+      setError(err.message || "Erro ao criar banco.");
     }
+  }
+
+  function openQuestions(bank: any) {
+    navigate("/questoes", {
+      state: { bank }
+    });
   }
 
   return (
@@ -59,13 +85,8 @@ export default function QuestionBank() {
 
       <div className={styles.list}>
         {banks.length === 0 && <p>Nenhum banco criado ainda.</p>}
-
         {banks.map((b) => (
-          <div key={b.id} className={styles.bankCard}>
-            <h3>Área: {b.area}</h3>
-            <p><strong>Ano:</strong> {b.ano}</p>
-            <p><strong>Bimestre:</strong> {b.bimestre}º</p>
-          </div>
+          <QuestionBankCard key={b.id} bank={b} onClick={() => openQuestions(b)} />
         ))}
       </div>
 
@@ -100,11 +121,12 @@ export default function QuestionBank() {
               <option value="Técnicas">Técnicas</option>
             </select>
 
+            {error && <p className={styles.errorMessage}>{error}</p>}
+
             <div className={styles.modalActions}>
               <button className={styles.modalCancel} onClick={() => setCreating(false)}>
                 Cancelar
               </button>
-
               <button className={styles.modalSave} onClick={handleCreate}>
                 Salvar
               </button>
