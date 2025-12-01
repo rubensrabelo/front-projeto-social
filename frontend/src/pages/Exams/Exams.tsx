@@ -110,7 +110,7 @@ export default function Exams() {
     <div className={styles.container}>
       <button
         className={styles.backBtn}
-        onClick={() => navigate("/home?type=professor")}
+        onClick={() => navigate("/home?type=professores")}
       >
         ⬅ Voltar
       </button>
