@@ -1,29 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Turmas.module.css";
 
-// import TurmaFilters from "./components/TurmaFilters";
 import TurmaCreateForm from "./components/TurmaForm";
 import TurmasTable from "./components/TurmaTable";
 import type { Turma } from "./types/TurmaType";
+import { GetAllSchoolClassesService } from "../../api/services/school-classes/GetAllSchoolClassesService";
+import { CreateSchoolClassService } from "../../api/services/school-classes/CreateSchoolClassService";
+import { getUserSession } from "../../utils/session/getUserSession";
 
 export default function Turmas() {
   const navigate = useNavigate();
 
-  // const [filters, setFilters] = useState({ bimestre: "", disciplina: "" });
-
   const [editing, setEditing] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
 
-  const [turmas, setTurmas] = useState<Turma[]>([
-    {
-      _id: "1",
-      ano: 2025,
-      curso: "Informática",
-      alunos: ["aluno1", "aluno2", "aluno3"],
-      professores: ["prof1"],
-    }
-  ]);
+  const [turmas, setTurmas] = useState<Turma[]>([]);
 
   const emptyTurma: Turma = {
     ano: 0,
@@ -35,24 +27,45 @@ export default function Turmas() {
   const [creating, setCreating] = useState(false);
   const [newTurma, setNewTurma] = useState<Turma>(emptyTurma);
 
-  const handleCreate = () => {
-    if (
-      !newTurma.ano ||
-      !newTurma.curso
-    ) {
+  useEffect(() => {
+    const loadTurmas = async () => {
+      try {
+        const turmasFromApi = await GetAllSchoolClassesService();
+        setTurmas(turmasFromApi);
+      } catch (err) {
+        alert("Erro ao carregar turmas");
+      }
+    };
+
+    loadTurmas();
+  }, []);
+
+  const handleCreate = async () => {
+    if (!newTurma.ano || !newTurma.curso) {
       alert("Preencha todos os campos.");
       return;
     }
 
-    const newT: Turma = {
-      ...newTurma,
-      _id: (turmas.length + 1).toString(),
-    };
+    try {
+      const user = getUserSession();
+      if (!user?.id) return;
 
-    setTurmas([...turmas, newT]);
-    setNewTurma(emptyTurma);
-    setCreating(false);
+      const payload = {
+        turma: { ...newTurma },
+        professores_id: newTurma.professores || [],
+      };
+
+      await CreateSchoolClassService(user.id, payload);
+      const result = await GetAllSchoolClassesService();
+
+      setTurmas(result);
+      setNewTurma(emptyTurma);
+      setCreating(false);
+    } catch (err) {
+      alert("Erro ao criar a turma");
+    }
   };
+
 
   const startEdit = (e: Turma) => {
     setNewTurma({ ...e });
@@ -110,7 +123,7 @@ export default function Turmas() {
         />
       )}
 
-      < TurmasTable
+      <TurmasTable
         turmas={turmas}
         handleDelete={handleDelete}
         startEdit={startEdit}

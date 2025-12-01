@@ -6,7 +6,7 @@ export async function CreateSchoolClassService(id_coordinator: string, body: any
     const url = `${ENV.API_BASE_URL}/turmas/${id_coordinator}`;
 
     const response = await fetch(url, {
-        method: "PUT",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
     });
