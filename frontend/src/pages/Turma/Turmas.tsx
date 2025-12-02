@@ -13,7 +13,6 @@ export default function Turmas() {
   const navigate = useNavigate();
 
   const [editing, setEditing] = useState(false);
-  const [editId, setEditId] = useState<string | null>(null);
 
   const [turmas, setTurmas] = useState<Turma[]>([]);
 
@@ -67,27 +66,18 @@ export default function Turmas() {
   };
 
 
-  const startEdit = (e: Turma) => {
-    setNewTurma({ ...e });
-    setEditId(e._id ?? null);
-    setEditing(true);
-  };
-
   const handleEdit = () => {
-    if (!editId) return;
-
-    setTurmas((prev) =>
-      prev.map((e) => (e._id === editId ? { ...newTurma, _id: editId } : e))
-    );
-
-    setNewTurma(emptyTurma);
-    setEditing(false);
-    setEditId(null);
+    alert("Habilita edit.");
   };
 
   const handleDelete = (id: string) => {
-    setTurmas((prev) => prev.filter((e) => e._id !== id));
+    alert("Habilita delete: " + id);
   };
+
+  const handleDetails = (id: string) => {
+    navigate(`/turmas/${id}`);
+  };
+
 
   return (
     <div className={styles.container}>
@@ -109,7 +99,6 @@ export default function Turmas() {
           newTurma={newTurma}
           setNewTurma={setNewTurma}
           handleCreate={handleCreate}
-          close={() => setCreating(false)}
         />
       )}
 
@@ -118,7 +107,6 @@ export default function Turmas() {
           newTurma={newTurma}
           setNewTurma={setNewTurma}
           handleCreate={handleEdit}
-          close={() => setEditing(false)}
           isEdit
         />
       )}
@@ -126,7 +114,8 @@ export default function Turmas() {
       <TurmasTable
         turmas={turmas}
         handleDelete={handleDelete}
-        startEdit={startEdit}
+        startEdit={handleEdit}
+        handleDetails={handleDetails}
       />
     </div>
   );

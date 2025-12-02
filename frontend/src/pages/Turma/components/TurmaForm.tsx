@@ -1,14 +1,13 @@
 import styles from "../Turmas.module.css";
 import type { Turma } from "../types/TurmaType";
-import { useState } from "react";
-import AlunoModal from "./AlunoModal"
-import ProfessorModal from "./ProfessorModal"
+// import { useState } from "react";
+// import AlunoModal from "./AlunoModal"
+// import ProfessorModal from "./ProfessorModal"
 
 interface Props {
   newTurma: Turma;
   setNewTurma: (e: Turma) => void;
   handleCreate: () => void;
-  close: () => void;
   isEdit?: boolean;
 }
 
@@ -16,15 +15,14 @@ export default function TurmaCreateForm({
   newTurma,
   setNewTurma,
   handleCreate,
-  close,
   isEdit = false,
 }: Props) {
   const update = (field: keyof Turma, value: any) => {
     setNewTurma({ ...newTurma, [field]: value });
   };
 
-  const [abrirAlunoModal, setAbrirAlunoModal] = useState(false);
-  const [abrirProfessorModal, setAbrirProfessorModal] = useState(false);
+  // const [abrirAlunoModal, setAbrirAlunoModal] = useState(false);
+  // const [abrirProfessorModal, setAbrirProfessorModal] = useState(false);
 
   return (
     <div className={styles.modalOverlay}>
@@ -56,12 +54,12 @@ export default function TurmaCreateForm({
           </select>
 
           {/* Adicioanar Alunos e professores */}
-          <button className={styles.modalSave} onClick={() => setAbrirAlunoModal(true)}>
+          {/* <button className={styles.modalSave} onClick={() => setAbrirAlunoModal(true)}>
               Adicionar Alunos
           </button>
           <button className={styles.modalSave} onClick={()=> setAbrirProfessorModal(true)}>
               Adicionar professores
-          </button>
+          </button> */}
           
         </div>
 
@@ -74,7 +72,7 @@ export default function TurmaCreateForm({
           </button>
         </div>
       </div>
-
+{/* 
       {abrirAlunoModal && (
           <AlunoModal
             selected={newTurma.alunos}
@@ -89,7 +87,7 @@ export default function TurmaCreateForm({
             onSelect={(professores) => update("professores", professores)}
             onClose={() => setAbrirProfessorModal(false)}
           />
-        )}
+        )} */}
 
     </div>
   );

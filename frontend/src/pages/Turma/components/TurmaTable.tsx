@@ -4,10 +4,11 @@ import type { Turma } from "../types/TurmaType";
 interface Props {
     turmas: Turma[];
     handleDelete: (id: string) => void;
-    startEdit: (e: Turma) => void;
+    startEdit: (t: Turma) => void;
+    handleDetails: (id: string) => void;
 }
 
-export default function TurmasTable({ turmas, handleDelete, startEdit }: Props) {
+export default function TurmasTable({ turmas, handleDelete, startEdit, handleDetails }: Props) {
     return (
         <div className={styles.tableWrapper}>
             <table className={styles.table}>
@@ -17,6 +18,7 @@ export default function TurmasTable({ turmas, handleDelete, startEdit }: Props) 
                         <th>Ano</th>
                         <th>Curso</th>
                         <th>Ações</th>
+                        <th>Ir para detalhes</th>
                     </tr>
                 </thead>
 
@@ -26,18 +28,29 @@ export default function TurmasTable({ turmas, handleDelete, startEdit }: Props) 
                             <td>{e._id}</td>
                             <td>{e.ano}</td>
                             <td>{e.curso}</td>
+
                             <td>
-                                <button 
+                                <button
                                     className={styles.editBtn}
                                     onClick={() => startEdit(e)}
                                 >
                                     Editar
                                 </button>
+
                                 <button
                                     className={styles.deleteBtn}
-                                    onClick={() => handleDelete(e._id ?? "")}
+                                    onClick={() => handleDelete(e._id!)}
                                 >
                                     Excluir
+                                </button>
+                            </td>
+
+                            <td>
+                                <button
+                                    className={styles.detailBtn}
+                                    onClick={() => handleDetails(e._id!)}
+                                >
+                                    Ir para detalhes
                                 </button>
                             </td>
                         </tr>

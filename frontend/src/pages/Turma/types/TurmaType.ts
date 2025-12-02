@@ -1,5 +1,5 @@
 export interface Turma {
-  _id?: string | null;
+  _id?: number;
   ano: number;
   curso: string;
   alunos: string[];

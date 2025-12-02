@@ -8,6 +8,7 @@ import Questions from "../pages/Questions/Questions";
 import QuestionBank from "../pages/QuestionBank/QuestionBank";
 import Exams from "../pages/Exams/Exams";
 import Turmas from "../pages/Turma/Turmas";
+import TurmaDetails from "../pages/Turma/subpage/TurmaDetails/TurmaDetails";
 
 function AppRouter() {
     return (
@@ -24,6 +25,7 @@ function AppRouter() {
                     <Route path="questoes" element={<Questions />} />
                     <Route path="exams" element={<Exams />} />
                     <Route path="turmas" element={<Turmas />} />
+                    <Route path="turmas/:id" element={<TurmaDetails />} />
                 </Route>
             </Routes>
         </BrowserRouter>
