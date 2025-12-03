@@ -9,6 +9,7 @@ import QuestionBank from "../pages/QuestionBank/QuestionBank";
 import Exams from "../pages/Exams/Exams";
 import Turmas from "../pages/Turma/Turmas";
 import TurmaDetails from "../pages/Turma/subpage/TurmaDetails/TurmaDetails";
+import ManageTeacher from "../pages/Teacher/ManageTeacher";
 
 function AppRouter() {
     return (
@@ -22,7 +23,7 @@ function AppRouter() {
                 <Route path="/" element={<ProtectedLayout />}>
                     <Route path="home" element={<Home />} />
                     <Route path="banco_de_questoes" element={<QuestionBank />} />
-                    <Route path="gerenciar_professores" element={<QuestionBank />} />
+                    <Route path="gerenciar_professores" element={<ManageTeacher />} />
                     <Route path="questoes" element={<Questions />} />
                     <Route path="exams" element={<Exams />} />
                     <Route path="turmas" element={<Turmas />} />
