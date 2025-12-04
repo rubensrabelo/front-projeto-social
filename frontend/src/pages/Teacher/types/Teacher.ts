@@ -3,4 +3,5 @@ export interface Teacher {
     nome: string;
     matricula: number;
     senha: string;
+    materia_ensinada: string;
 }

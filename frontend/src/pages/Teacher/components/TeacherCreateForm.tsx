@@ -28,6 +28,47 @@ export default function TeacherCreateForm({
                     <h2 className={styles.modalTitle}>
                         {isEdit ? "Editar Professor" : "Criar Professor"}
                     </h2>
+
+                    <input
+                        placeholder="Nome"
+                        value={newTeacher.nome || ""}
+                        onChange={(e) => update("nome", e.target.value)}
+                    />
+
+                    <input
+                        type="number"
+                        placeholder="matricula"
+                        value={newTeacher.matricula || ""}
+                        onChange={(e) => update("matricula", Number(e.target.value))}
+                    />
+
+                    <input
+                        placeholder="senha"
+                        value={newTeacher.senha || ""}
+                        onChange={(e) => update("senha", e.target.value)}
+                    />
+
+                    <select
+                        value={newTeacher.materia_ensinada || ""}
+                        onChange={(e) => update("materia_ensinada", e.target.value)}
+                    >
+                        <option value="">Selecione a Matéria</option>
+                        <option value="Português">Português</option>
+                        <option value="Matemática">Matemática</option>
+                        <option value="Física">Física</option>
+                        <option value="Química">Química</option>
+                        <option value="História">História</option>
+                        <option value="Geografia">Geografia</option>
+                    </select>
+                </div>
+
+                <div className={styles.modalActions}>
+                    <button className={styles.modalCancel} onClick={close}>
+                        Cancelar
+                    </button>
+                    <button className={styles.modalSave} onClick={handleCreate}>
+                        {isEdit ? "Salvar Alterações" : "Salvar"}
+                    </button>
                 </div>
             </div>
         </div>
