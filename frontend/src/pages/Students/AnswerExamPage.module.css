@@ -1,0 +1,186 @@
+.container {
+  display: flex;
+  gap: 20px;
+  padding: 30px;
+  background-color: #e8f8ed;
+  min-height: 100vh;
+}
+
+/* ÁREA DAS QUESTÕES*/
+
+.questionsArea {
+  flex: 3;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 6px #00000022;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.examTitle {
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #004940;
+}
+
+.questionBox {
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.questionText {
+  color: #2f3d37;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 10px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f7f7f7;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+/* Muda a cor do radio button */
+input[type="radio"] {
+  accent-color: #1B876C;
+}
+
+.option:hover {
+  background: #DDFFE6;
+}
+
+.backBtn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: #054c44;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.backBtn:hover {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: #1B876C;
+}
+
+/* SIDEBAR / PROGRESSO */
+
+.sidebar {
+  flex: 1;
+}
+
+.progressCard {
+  position: sticky;
+  top: 20px;
+  background: white;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color:#004940;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px #00000022;
+  text-align: center;
+}
+
+.progressCount {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color:#1B876C;
+  font-size: 46px;
+  margin-bottom: 20px;
+}
+
+.timer {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color:#1B876C;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.finishBtn {
+  padding: 12px 20px;
+  width: 100%;
+  background: #054c44;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.finishBtn:hover {
+  background: #1B876C;
+}
+
+/* RESPONSIVIDADE*/
+
+/* Tablet*/
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .questionsArea {
+    max-height: none;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .progressCard {
+    position: static; /* evita bug de sticky no mobile */
+  }
+}
+
+/* Celular */
+@media (max-width: 768px) {
+  .examTitle {
+    font-size: 20px;
+  }
+
+  .questionText {
+    font-size: 16px;
+  }
+
+  .option {
+    padding: 8px;
+  }
+
+  .progressCard {
+    padding: 15px;
+  }
+
+  .progressCount {
+    font-size: 26px;
+  }
+
+  .timer {
+    font-size: 20px;
+  }
+
+  .finishBtn {
+    padding: 14px;
+    font-size: 16px;
+  }
+}

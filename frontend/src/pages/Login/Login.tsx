@@ -7,6 +7,7 @@ import logo from "../../assets/logo-eeep.webp";
 import Input from "../../Components/Input/Input";
 
 import { login } from "../../api/services/auth/LoginService";
+import { getAluno } from "../../api/services/student/GetAlunoService";
 import { saveUserSession } from "../../utils/session/saveUserSession";
 
 type LoginForm = {
@@ -40,11 +41,11 @@ export default function Login() {
   async function handleSubmit() {
     try {
       if (type === "alunos") {
-        // const data = { matricula: Number(form.matricula) };
-        // const user = await login(data, "alunos");
-        // saveUserSession(user);
-        // navigate(`/home?type=${type}`);
-        alert("Ainda não foi implementado.")
+        const data = Number(form.matricula);
+        const user = await getAluno(data, "alunos");
+        saveUserSession(user);
+        navigate(`/student`);
+        
         return;
       }
 

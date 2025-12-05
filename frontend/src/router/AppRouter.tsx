@@ -10,6 +10,8 @@ import Exams from "../pages/Exams/Exams";
 import Turmas from "../pages/Turma/Turmas";
 import TurmaDetails from "../pages/Turma/subpage/TurmaDetails/TurmaDetails";
 import ManageTeacher from "../pages/Teacher/ManageTeacher";
+import StudentsHome from "../pages/Students/StudentsHome";
+import AnswerExam from "../pages/Students/AnswerExams";
 
 function AppRouter() {
     return (
@@ -28,6 +30,8 @@ function AppRouter() {
                     <Route path="exams" element={<Exams />} />
                     <Route path="turmas" element={<Turmas />} />
                     <Route path="turmas/:id" element={<TurmaDetails />} />
+                    <Route path="student" element={<StudentsHome />} />
+                    <Route path="student/answerExam/:id" element={<AnswerExam />} />
                 </Route>
             </Routes>
         </BrowserRouter>
