@@ -60,14 +60,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #024e45;
+  color: #004940;
   font-weight: 600;
   transition: 0.2s ease;
   margin-top: 22px;
 }
 
 .toggleBtn:hover {
-  background: #e0f4ec;
+  background: #1B876C;
 }
 
 .sectionContent {
@@ -201,6 +201,90 @@
 
 .cancelBtn:hover {
   background: #cfd3d3;
+}
+
+.sectionList {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sectionList::-webkit-scrollbar-thumb {
+  background: #b7d6c9;
+  border-radius: 3px;
+}
+
+.personItem {
+  list-style: none;
+}
+
+.personCard {
+  background: #eef9f4;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #cfe8dc;
+  display: flex;
+  flex-direction: column;
+}
+
+.personName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #024e45;
+}
+
+.personDetails {
+  font-size: 13px;
+  color: #27685d;
+  margin-top: 3px;
+}
+
+.toggleBtn {
+  width: 100%;
+  padding: 12px;
+  background: #024e45;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.toggleBtn span {
+  float: right;
+}
+
+.addSmallBtn {
+  margin-top: 10px;
+  background: #03695b;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px solid #cde5d7;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 30px;
+}
+
+.sectionContent {
+  overflow: hidden;
+  transition: max-height .3s ease;
 }
 
 @media (max-width: 992px) {

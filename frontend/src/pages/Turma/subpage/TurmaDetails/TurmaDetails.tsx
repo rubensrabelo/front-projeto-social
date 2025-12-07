@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./TurmaDetails.module.css";
-
 import AddTeacherModal from "./components/AddTeacherModal";
 import { GetAllSchoolClassesByIdService } from "../../../../api/services/school-classes/GetSchoolClassesByIdService";
 import AddStudentModal from "./components/AddStudentModal";
 import { getUserSession } from "../../../../utils/session/getUserSession";
+import PersonItem from "./components/PersonItem";
 
 export default function TurmaDetails() {
     const { id } = useParams();
@@ -15,8 +15,8 @@ export default function TurmaDetails() {
     const [turma, setTurma] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
-    const [showProfessores, setShowProfessores] = useState(true);
-    const [showAlunos, setShowAlunos] = useState(true);
+    const [showProfessores, setShowProfessores] = useState(false);
+    const [showAlunos, setShowAlunos] = useState(false);
 
     const [addingTeacher, setAddingTeacher] = useState(false);
     const [addingStudent, setAddingStudent] = useState(false);
@@ -25,8 +25,6 @@ export default function TurmaDetails() {
         try {
             const data = await GetAllSchoolClassesByIdService(Number(id));
             setTurma(data.turma || data);
-        } catch (err) {
-            alert("Erro ao carregar detalhes da turma");
         } finally {
             setLoading(false);
         }
@@ -51,10 +49,9 @@ export default function TurmaDetails() {
                 <p><strong>Ano:</strong> {turma.ano}</p>
                 <p><strong>Curso:</strong> {turma.curso}</p>
 
-                {/* PROFESSORES */}
                 <button
                     className={styles.toggleBtn}
-                    onClick={() => setShowProfessores((prev) => !prev)}
+                    onClick={() => setShowProfessores(prev => !prev)}
                 >
                     Professores ({turma.professores?.length})
                     <span>{showProfessores ? "▲" : "▼"}</span>
@@ -62,26 +59,30 @@ export default function TurmaDetails() {
 
                 <div
                     className={styles.sectionContent}
-                    style={{ maxHeight: showProfessores ? "500px" : "0px" }}
+                    style={{ maxHeight: showProfessores ? "320px" : "0px" }}
                 >
                     <ul className={styles.sectionList}>
                         {turma.professores?.map((p: any) => (
-                            <li key={p.id}>{p.nome}</li>
+                            <PersonItem
+                                key={typeof p === "string" ? p : p._id}
+                                id={typeof p === "string" ? p : p._id}
+                                type="professor"
+                                data={typeof p === "object" ? p : undefined}
+                            />
                         ))}
                     </ul>
-
-                    <button
-                        className={styles.addSmallBtn}
-                        onClick={() => setAddingTeacher(true)}
-                    >
-                        + Adicionar Professor
-                    </button>
                 </div>
 
-                {/* ALUNOS (vai implementar depois) */}
+                <button
+                    className={styles.addSmallBtn}
+                    onClick={() => setAddingTeacher(true)}
+                >
+                    + Adicionar Professor
+                </button>
+
                 <button
                     className={styles.toggleBtn}
-                    onClick={() => setShowAlunos((prev) => !prev)}
+                    onClick={() => setShowAlunos(prev => !prev)}
                 >
                     Alunos ({turma.alunos?.length})
                     <span>{showAlunos ? "▲" : "▼"}</span>
@@ -89,23 +90,21 @@ export default function TurmaDetails() {
 
                 <div
                     className={styles.sectionContent}
-                    style={{ maxHeight: showAlunos ? "500px" : "0px" }}
+                    style={{ maxHeight: showAlunos ? "320px" : "0px" }}
                 >
                     <ul className={styles.sectionList}>
-                        {turma.alunos?.map((aluno: any) => (
-                            <li key={aluno}>
-                                {aluno} — Matrícula: {aluno}
-                            </li>
+                        {turma.alunos?.map((idAluno: string) => (
+                            <PersonItem key={idAluno} id={idAluno} type="aluno" />
                         ))}
                     </ul>
-
-                    <button
-                        className={styles.addSmallBtn}
-                        onClick={() => setAddingStudent(true)}
-                    >
-                        + Adicionar Aluno
-                    </button>
                 </div>
+
+                <button
+                    className={styles.addSmallBtn}
+                    onClick={() => setAddingStudent(true)}
+                >
+                    + Adicionar Aluno
+                </button>
             </div>
 
             {addingTeacher && (
