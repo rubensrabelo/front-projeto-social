@@ -3,7 +3,7 @@ import type { Turma } from "../types/TurmaType";
 
 interface Props {
     turmas: Turma[];
-    handleDelete: (id: string) => void;
+    handleDelete: (t: Turma) => void;
     startEdit: (t: Turma) => void;
     handleDetails: (id: string) => void;
 }
@@ -48,7 +48,7 @@ export default function TurmasTable({ turmas, handleDelete, startEdit, handleDet
 
                                 <button
                                     className={styles.deleteBtn}
-                                    onClick={() => handleDelete(e._id!)}
+                                    onClick={() => handleDelete(e)}
                                 >
                                     Excluir
                                 </button>
