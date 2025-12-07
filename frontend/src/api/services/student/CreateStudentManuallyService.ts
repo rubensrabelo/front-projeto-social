@@ -2,12 +2,13 @@ import ENV from "../../../config/envConfig.ts";
 import { AuthError } from "../../errors/AuthError.ts";
 import { parseErrorResponse } from "../../utils/parseErrorResponse.ts";
 
-export async function GetAllTeacherService(idCoordenator: string) {
-    const url = `${ENV.API_BASE_URL}/professores/${idCoordenator}`;
+export async function CreateStudentManuallyService(id_coordinator: string, body: any) {
+    const url = `${ENV.API_BASE_URL}/alunos/${id_coordinator}`;
 
     const response = await fetch(url, {
-        method: "GET",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
     });
 
     if (!response.ok) {
@@ -15,8 +16,6 @@ export async function GetAllTeacherService(idCoordenator: string) {
         throw new AuthError(message, status);
     }
 
-    const data = await response.json();
-
-    return data["professores"] || [];
+    return await response.json();
 }
 

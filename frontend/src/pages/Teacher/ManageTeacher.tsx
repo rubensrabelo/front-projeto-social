@@ -5,7 +5,7 @@ import type { Teacher } from "./types/Teacher";
 import TeacherCreateForm from "./components/TeacherCreateForm";
 import TeacherTable from "./components/TeacherTable";
 import { getUserSession } from "../../utils/session/getUserSession";
-import { getAllTeacherService } from "../../api/services/teacher/getAllTeacherService";
+import { GetAllTeacherService } from "../../api/services/teacher/GetAllTeacherService";
 import { CreateTeacherService } from "../../api/services/teacher/CreateTeacherService";
 
 export default function ManageTeacher() {
@@ -26,7 +26,7 @@ export default function ManageTeacher() {
         async function loadTeacher() {
             try {
                 const data = getUserSession();
-                const teacherApi = await getAllTeacherService(data.id);
+                const teacherApi = await GetAllTeacherService(data.id);
 
                 setTeacher(teacherApi);
             } catch (err) {
@@ -53,7 +53,7 @@ export default function ManageTeacher() {
             };
 
             await CreateTeacherService(data.id, payload);
-            const result = await getAllTeacherService(data.id);
+            const result = await GetAllTeacherService(data.id);
 
             setTeacher(result);
             setNewTeacher(emptyTeacher);
