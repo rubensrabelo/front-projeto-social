@@ -2,12 +2,13 @@ import ENV from "../../../config/envConfig.ts";
 import { AuthError } from "../../errors/AuthError.ts";
 import { parseErrorResponse } from "../../utils/parseErrorResponse.ts";
 
-export async function UpdateExamService(id_teacher: string, id_exam: string) {
+export async function UpdateExamService(id_teacher: string, id_exam: string, body: any) {
     const url = `${ENV.API_BASE_URL}/professores/${id_teacher}/provas/${id_exam}`;
 
     const response = await fetch(url, {
-        method: "DELETE",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
     });
 
     if (!response.ok) {

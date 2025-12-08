@@ -7,7 +7,7 @@ interface Props {
   startEdit: (e: Exam) => void;
 }
 
-export default function ExamsTable({ exams, handleDelete, startEdit }: Props) {
+export default function ExamTable({ exams, handleDelete, startEdit }: Props) {
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
@@ -20,7 +20,6 @@ export default function ExamsTable({ exams, handleDelete, startEdit }: Props) {
             <th>Ações</th>
           </tr>
         </thead>
-
         <tbody>
           {exams.map((e) => (
             <tr key={e.id}>
@@ -29,19 +28,8 @@ export default function ExamsTable({ exams, handleDelete, startEdit }: Props) {
               <td>{e.titulo}</td>
               <td>{e.area}</td>
               <td>
-                <button 
-                  className={styles.editBtn}
-                  onClick={() => startEdit(e)}
-                >
-                  Editar
-                </button>
-
-                <button
-                  className={styles.deleteBtn}
-                  onClick={() => handleDelete(e.id!)}
-                >
-                  Excluir
-                </button>
+                <button className={styles.editBtn} onClick={() => startEdit(e)}>Editar</button>
+                <button className={styles.deleteBtn} onClick={() => handleDelete(e.id!)}>Excluir</button>
               </td>
             </tr>
           ))}

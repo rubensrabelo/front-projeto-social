@@ -1,34 +1,53 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 import styles from "./Exams.module.css";
 import ExamTable from "./components/ExamTable";
 import type { Exam } from "./types/ExamsType";
 
+import { getUserSession } from "../../utils/session/getUserSession";
+import { DeleteExamService } from "../../api/services/exams/DeleteExamService";
+import { GetAllExamesService } from "../../api/services/exams/GetAllExamsService";
+
 export default function Exams() {
   const navigate = useNavigate();
-
   const [exams, setExams] = useState<Exam[]>([]);
+
+  useEffect(() => {
+    const loadExams = async () => {
+      try {
+        const user = getUserSession();
+        const data = await GetAllExamesService(user.id);
+        setExams(data);
+      } catch {
+        alert("Erro ao carregar provas");
+      }
+    };
+    loadExams();
+  }, []);
 
   const startCreate = () => {
     navigate("/exams/create");
   };
 
-  const startEdit = (e: Exam) => {
-    sessionStorage.setItem("editing_exam", JSON.stringify(e));
-    navigate(`/exams/edit/${e.id}`);
+  const startEdit = (exam: Exam) => {
+    sessionStorage.setItem("editing_exam", JSON.stringify(exam));
+    navigate(`/exams/edit/${exam.id}`);
   };
 
-  const handleDelete = (id: number) => {
-    setExams((prev) => prev.filter((e) => e.id !== id));
+  const handleDelete = async (id: number) => {
+    const user = getUserSession();
+    try {
+      await DeleteExamService(String(user.id), String(id));
+      setExams((prev) => prev.filter((e) => e.id !== id));
+    } catch {
+      alert("Erro ao excluir prova");
+    }
   };
 
   return (
     <div className={styles.container}>
-      <button
-        className={styles.backBtn}
-        onClick={() => navigate("/home?type=professores")}
-      >
+      <button className={styles.backBtn} onClick={() => navigate("/home?type=professores")}>
         ⬅ Voltar
       </button>
 
@@ -38,11 +57,7 @@ export default function Exams() {
         + Nova Prova
       </button>
 
-      <ExamTable
-        exams={exams}
-        handleDelete={handleDelete}
-        startEdit={startEdit}
-      />
+      <ExamTable exams={exams} handleDelete={handleDelete} startEdit={startEdit} />
     </div>
   );
 }

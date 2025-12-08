@@ -10,42 +10,17 @@ interface Props {
   questionBanks: any[];
 }
 
-export default function ExamCreateForm({
-  newExam,
-  setNewExam,
-  handleCreate,
-  close,
-  isEdit = false,
-  questionBanks,
-}: Props) {
-  const update = (field: keyof Exam, value: any) => {
-    setNewExam({ ...newExam, [field]: value });
-  };
+export default function ExamCreateForm({ newExam, setNewExam, handleCreate, close, isEdit = false, questionBanks }: Props) {
+  const update = (field: keyof Exam, value: any) => setNewExam({ ...newExam, [field]: value });
 
   return (
     <div className={styles.formPage}>
-      <h2 className={styles.formTitle}>
-        {isEdit ? "Editar Prova" : "Criar Nova Prova"}
-      </h2>
+      <h2 className={styles.formTitle}>{isEdit ? "Editar Prova" : "Criar Nova Prova"}</h2>
 
-      <input
-        type="text"
-        placeholder="Título"
-        value={newExam.titulo}
-        onChange={(e) => update("titulo", e.target.value)}
-      />
+      <input type="text" placeholder="Título" value={newExam.titulo} onChange={(e) => update("titulo", e.target.value)} />
+      <input type="number" placeholder="Quantidade de Questões" value={newExam.quantidade_questoes || ""} onChange={(e) => update("quantidade_questoes", Number(e.target.value))} />
 
-      <input
-        type="number"
-        placeholder="Quantidade de Questões"
-        value={newExam.quantidade_questoes || ""}
-        onChange={(e) => update("quantidade_questoes", Number(e.target.value))}
-      />
-
-      <select
-        value={newExam.bimestre}
-        onChange={(e) => update("bimestre", Number(e.target.value))}
-      >
+      <select value={newExam.bimestre} onChange={(e) => update("bimestre", Number(e.target.value))}>
         <option value="">Bimestre</option>
         <option value={1}>1º</option>
         <option value={2}>2º</option>
@@ -53,10 +28,7 @@ export default function ExamCreateForm({
         <option value={4}>4º</option>
       </select>
 
-      <select
-        value={newExam.area}
-        onChange={(e) => update("area", e.target.value)}
-      >
+      <select value={newExam.area} onChange={(e) => update("area", e.target.value)}>
         <option value="">Disciplina</option>
         <option value="Matemática">Matemática</option>
         <option value="Biologia">Biologia</option>
@@ -73,48 +45,23 @@ export default function ExamCreateForm({
         <option value="Educação Física">Educação Física</option>
       </select>
 
-      <input
-        type="date"
-        placeholder="Dia a ser realizada"
-        value={newExam.dia_a_ser_realizada}
-        onChange={(e) => update("dia_a_ser_realizada", e.target.value)}
-      />
+      <input type="date" value={newExam.dia_a_ser_realizada} onChange={(e) => update("dia_a_ser_realizada", e.target.value)} />
+      <input type="time" value={newExam.hora_a_ser_liberada} onChange={(e) => update("hora_a_ser_liberada", e.target.value)} />
 
-      <input
-        type="time"
-        placeholder="Hora a ser liberada"
-        value={newExam.hora_a_ser_liberada}
-        onChange={(e) => update("hora_a_ser_liberada", e.target.value)}
-      />
-
-      <select
-        value={newExam.banco_questao_id || ""}
-        onChange={(e) => update("banco_questao_id", Number(e.target.value))}
-      >
+      <select value={newExam.banco_questao_id || ""} onChange={(e) => update("banco_questao_id", Number(e.target.value))}>
         <option value="">Banco de Questões</option>
-        {questionBanks.map((b) => (
-          <option key={b.id} value={b.id}>
-            {b.area}
-          </option>
-        ))}
+        {questionBanks.map((b) => <option key={b.id} value={b.id}>{b.area}</option>)}
       </select>
 
-      <select
-        value={newExam.metodo_de_selecao_de_ap}
-        onChange={(e) => update("metodo_de_selecao_de_ap", e.target.value)}
-      >
+      <select value={newExam.metodo_de_selecao_de_ap} onChange={(e) => update("metodo_de_selecao_de_ap", e.target.value)}>
         <option value="">Método de Seleção de Questões</option>
         <option value="Manual">Manual</option>
         <option value="Aleatória">Aleatória</option>
       </select>
 
       <div className={styles.formActions}>
-        <button className={styles.cancelBtn} onClick={close}>
-          Cancelar
-        </button>
-        <button className={styles.saveBtn} onClick={handleCreate}>
-          {isEdit ? "Salvar Alterações" : "Salvar"}
-        </button>
+        <button className={styles.cancelBtn} onClick={close}>Cancelar</button>
+        <button className={styles.saveBtn} onClick={handleCreate}>{isEdit ? "Salvar Alterações" : "Salvar"}</button>
       </div>
     </div>
   );

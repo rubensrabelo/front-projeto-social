@@ -3,17 +3,17 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import styles from "../Exams.module.css";
 import type { Exam } from "../types/ExamsType";
+
 import { getUserSession } from "../../../utils/session/getUserSession";
 import { GetAllQuestionBankService } from "../../../api/services/QuestionBank/GetAllQuestionBankService";
-import { UpdateExamService } from "../../../api/services/exams/DeleteExamService";
 import { CreateExamService } from "../../../api/services/exams/CreateExamService";
+import { UpdateExamService } from "../../../api/services/exams/UpdateExamService";
 import ExamCreateForm from "../components/ExamForm";
-
 
 export default function ExamCreatePage() {
   const navigate = useNavigate();
-  const params = useParams();
-  const isEdit = Boolean(params.id);
+  const { id } = useParams();
+  const isEdit = Boolean(id);
 
   const emptyExam: Exam = {
     titulo: "",
@@ -29,44 +29,38 @@ export default function ExamCreatePage() {
   };
 
   const [exam, setExam] = useState<Exam>(emptyExam);
-  const [questionBanks, setQuestionBanks] = useState([]);
+  const [questionBanks, setQuestionBanks] = useState<any[]>([]);
 
+  // Carrega bancos de questões
   useEffect(() => {
     const loadBanks = async () => {
-      const user = getUserSession();
-      const id = user.id;
-
       try {
-        const banks = await GetAllQuestionBankService(id);
+        const user = getUserSession();
+        const banks = await GetAllQuestionBankService(user.id);
         setQuestionBanks(banks);
       } catch {
-        alert("Erro carregando bancos de questões.");
+        alert("Erro ao carregar bancos de questões");
       }
     };
-
     loadBanks();
   }, []);
 
+  // Carrega exame para edição
   useEffect(() => {
     if (isEdit) {
       const saved = sessionStorage.getItem("editing_exam");
-      if (saved) {
-        setExam(JSON.parse(saved));
-      }
+      if (saved) setExam(JSON.parse(saved));
     }
   }, [isEdit]);
 
-  const save = async () => {
+  const handleSave = async () => {
     const user = getUserSession();
-    const teacherId = user.id;
-
     try {
       if (isEdit) {
-        await UpdateExamService(teacherId, params.id!, exam);
+        await UpdateExamService(String(user.id), String(id), exam);
       } else {
-        await CreateExamService(teacherId, exam);
+        await CreateExamService(String(user.id), exam);
       }
-
       navigate("/exams");
     } catch {
       alert("Erro ao salvar prova");
@@ -82,7 +76,7 @@ export default function ExamCreatePage() {
       <ExamCreateForm
         newExam={exam}
         setNewExam={setExam}
-        handleCreate={save}
+        handleCreate={handleSave}
         close={() => navigate("/exams")}
         isEdit={isEdit}
         questionBanks={questionBanks}
