@@ -16,8 +16,6 @@ export default function StudentsHome() {
         async function loadExams() {
             try {
                 const examsData = await GetExamsService(student._id);
-                console.log(examsData);
-
                 // Pegando somente o array de provas
                 setExams(examsData);
             } catch (error) {

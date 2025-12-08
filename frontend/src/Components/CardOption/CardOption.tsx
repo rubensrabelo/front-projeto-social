@@ -2,14 +2,14 @@ import styles from "./CardOption.module.css";
 
 type CardOptionProps = {
   title: string;
-  image: string;
+  Icon: React.FC<React.SVGProps<SVGSVGElement>>
   onClick?: () => void;
 };
 
-export default function CardOption({ title, image, onClick }: CardOptionProps) {
+export default function CardOption({ title, Icon, onClick }: CardOptionProps) {
   return (
     <button className={styles.cardOption} onClick={onClick}>
-      <img src={image} alt={title} className={styles.cardImage} />
+      <Icon className={styles.cardImage} />
       <h3 className={styles.cardTitle}>{title}</h3>
     </button>
   );

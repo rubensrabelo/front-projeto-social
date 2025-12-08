@@ -1,13 +1,13 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import CardOption from "../../Components/CardOption/CardOption";
 
-import questoes from "../../assets/question_icon.svg";
-import provas from "../../assets/tests_icon.svg";
-import relatorio from "../../assets/report_icon.svg";
-import gerenciar_usuario from "../../assets/usuarios_icon.svg";
-import professor from "../../assets/icon-teacher.svg";
-
 import styles from "./Home.module.css";
+
+import QuestionIcon from "../../assets/QuestionIcon";
+import ExamIcon from "../../assets/ExamIcon";
+import TeacherIcon from "../../assets/TeacherIcon";
+import SchoolClassIcon from "../../assets/SchoolClassIcon";
+import HistogramIcon from "../../assets/histogramIcon";
 
 export default function Home() {
   const [searchParams] = useSearchParams();
@@ -35,13 +35,13 @@ export default function Home() {
           <>
             <CardOption
               title="Minhas Questões"
-              image={questoes}
+              Icon={QuestionIcon}
               onClick={() => navigate("/banco_de_questoes")}
             />
 
             <CardOption
               title="Minhas Provas"
-              image={provas}
+              Icon={ExamIcon}
               onClick={() => navigate("/exams")}
             />
           </>
@@ -51,12 +51,12 @@ export default function Home() {
           <>
             <CardOption
               title="Gerenciar Turmas"
-              image={gerenciar_usuario}
+              Icon={SchoolClassIcon}
               onClick={() => navigate("/turmas")}
             />
             <CardOption
               title="Gerenciar professores"
-              image={professor}
+              Icon={TeacherIcon}
               onClick={() => navigate("/gerenciar_professores")}
             />
           </>
@@ -64,7 +64,7 @@ export default function Home() {
 
         <CardOption
           title="Relatórios"
-          image={relatorio}
+          Icon={HistogramIcon}
           onClick={() => navigate("/reports")}
         />
 

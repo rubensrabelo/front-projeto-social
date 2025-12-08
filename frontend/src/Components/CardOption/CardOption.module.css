@@ -3,7 +3,7 @@
   height: 220px;
 
   background: #ffffff;
-  border: 2px solid #546068;
+  border: 2px solid #787a7c;
   border-radius: 18px;
 
   display: flex;
@@ -25,7 +25,7 @@
   transform: translateY(-6px);
   border-color: #1B876C;
   box-shadow: 0px 8px 18px rgba(0, 0, 0, 0.18);
-  background-color: #DDFFE6;
+  background-color: #1B876C;
 }
 
 .cardOption:active {
@@ -33,16 +33,23 @@
 }
 
 .cardImage {
-  width: 75px;
-  height: 75px;
+  width: 96px;
+  height: 96px;
   object-fit: contain;
   margin-bottom: 16px;
+  color: #004940;
 }
 
 .cardTitle {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-family: "Poppins", Arial, sans-serif;
   font-weight: 600;
   color: #004940;
   text-align: center;
+}
+.cardOption:hover .cardTitle {
+  color: #ffffff;
+}
+.cardOption:hover .cardImage{
+  color: #ffffff;
 }

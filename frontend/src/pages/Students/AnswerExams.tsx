@@ -16,6 +16,26 @@ export default function AnswerExamPage() {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState(120 * 60); // 120 minutos
+  
+  // busca questões em lotes para evitar sobrecarga
+  async function fetchInBatches(ids: number[], batchSize : number) {
+
+  const results: any[] = [];
+
+  for (let i = 0; i < ids.length; i += batchSize) {
+    const batch = ids.slice(i, i + batchSize);
+
+    const batchResults = await Promise.all(
+      batch.map(qid =>
+        GetQuestionExamService(professorId!, Number(bankId), qid)
+      )
+    );
+
+    results.push(...batchResults);
+  }
+
+    return results; 
+  }
 
   // Chamar a API para buscar as questões da prova
   useEffect(() => {
@@ -25,12 +45,8 @@ export default function AnswerExamPage() {
       const examData = await GetExamByIdService(professorId, examId);
       const questionIds = examData.questoes_id || [];
 
-      // carrega as questões em paralelo
-      const questionsData = await Promise.all(
-        questionIds.map((qid : number) =>
-          GetQuestionExamService(professorId, Number(bankId), qid)
-        )
-      );
+      // carrega as questões em lote
+      const questionsData = await fetchInBatches(questionIds, 5);
 
       // seta uma vez só
       setQuestions(questionsData);
@@ -51,15 +67,15 @@ export default function AnswerExamPage() {
     return () => clearInterval(t);
   }, []);
 
-  const handleSelect = (qid: number, letra: string) => {
-    setAnswers({ ...answers, [qid]: letra });
-  };
-
   const formatTime = (sec: number) => {
     const h = String(Math.floor(sec / 3600)).padStart(2, "0");
     const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
     const s = String(sec % 60).padStart(2, "0");
     return `${h}:${m}:${s}`;
+  };
+
+  const handleSelect = (qid: number, letra: string) => {
+    setAnswers({ ...answers, [qid]: letra });
   };
 
   const finalize = () => {
