@@ -25,19 +25,30 @@ export default function ExamCreateForm({
   const [modalQuestionsOpen, setModalQuestionsOpen] = useState(false);
   const [modalClassesOpen, setModalClassesOpen] = useState(false);
 
-  const update = (field: keyof Exam, value: any) =>
-    setNewExam({ ...newExam, [field]: value });
+  const update = (field: keyof Exam, value: any) => {
+    setNewExam({
+      ...newExam,
+      [field]: value,
+    });
+  };
 
-  // Quando confirmar seleção de questões
+  // ✅ CORRIGIDO: atualiza os dois campos em um único setNewExam
   const handleQuestionsSelected = (questionsIds: number[], bankId: number) => {
-    update("questoes_id", questionsIds);
-    update("banco_questao_id", bankId);
+    setNewExam({
+      ...newExam,
+      banco_questao_id: bankId,
+      questoes_id: questionsIds,
+    });
+
     setModalQuestionsOpen(false);
   };
 
-  // Quando confirmar seleção de turmas
   const handleClassesSelected = (classIds: number[]) => {
-    update("turmas", classIds);
+    setNewExam({
+      ...newExam,
+      turmas: classIds,
+    });
+
     setModalClassesOpen(false);
   };
 
@@ -84,12 +95,8 @@ export default function ExamCreateForm({
       >
         <option value="">Disciplina</option>
         <option value="Matemática">Matemática</option>
-        <option value="Português">Português</option>
-        <option value="História">História</option>
-        <option value="Geografia">Geografia</option>
-        <option value="Física">Física</option>
-        <option value="Química">Química</option>
-        <option value="Biologia">Biologia</option>
+        <option value="Linguagens">Linguagens</option>
+        <option value="Técnicas">Técnicas</option>
       </select>
 
       {/* Data */}

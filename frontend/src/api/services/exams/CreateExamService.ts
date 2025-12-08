@@ -5,6 +5,8 @@ import { parseErrorResponse } from "../../utils/parseErrorResponse.ts";
 export async function CreateExamService(id_teacher: string, body: any) {
     const url = `${ENV.API_BASE_URL}/professores/${id_teacher}/provas`;
 
+    console.log(body);
+
     const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

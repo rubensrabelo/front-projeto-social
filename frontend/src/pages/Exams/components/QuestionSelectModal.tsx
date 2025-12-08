@@ -17,7 +17,14 @@ export default function QuestionSelectModal({ close, banks, onConfirm }: Props) 
   const loadQuestions = async (bankId: number) => {
     const user = getUserSession();
     const data = await GetAllQuestionService(user.id, bankId);
-    setQuestions(data);
+
+    // Garantir que todos os IDs venham como number
+    const normalized = data.map((q: any) => ({
+      ...q,
+      id: Number(q.id),
+    }));
+
+    setQuestions(normalized);
   };
 
   useEffect(() => {
@@ -26,11 +33,12 @@ export default function QuestionSelectModal({ close, banks, onConfirm }: Props) 
     }
   }, [selectedBank]);
 
-  const toggleSelect = (id: number) => {
+  const toggleSelect = (id: number | string) => {
+    const numId = Number(id);
     setSelectedQuestions((prev) =>
-      prev.includes(id)
-        ? prev.filter((q) => q !== id)
-        : [...prev, id]
+      prev.includes(numId)
+        ? prev.filter((q) => q !== numId)
+        : [...prev, numId]
     );
   };
 
@@ -41,7 +49,10 @@ export default function QuestionSelectModal({ close, banks, onConfirm }: Props) 
 
         <select
           value={selectedBank}
-          onChange={(e) => setSelectedBank(Number(e.target.value))}
+          onChange={(e) => {
+            const v = e.target.value;
+            setSelectedBank(v === "" ? "" : Number(v));
+          }}
         >
           <option value="">Selecione um Banco</option>
           {banks.map((b) => (
@@ -61,30 +72,35 @@ export default function QuestionSelectModal({ close, banks, onConfirm }: Props) 
               <p>Nenhuma questão cadastrada para este banco.</p>
             </div>
           ) : (
-            questions.map((q) => (
-              <label key={q.id} className={styles.questionItem}>
-                <div className={styles.questionHeader}>
-                  <input
-                    type="checkbox"
-                    checked={selectedQuestions.includes(q.id)}
-                    onChange={() => toggleSelect(q.id)}
-                    className={styles.checkbox}
-                  />
+            questions.map((q) => {
+              const qId = Number(q.id);
 
-                  <span className={styles.questionText}>{q.enunciado}</span>
-                </div>
+              return (
+                <label key={qId} className={styles.questionItem}>
+                  <div className={styles.questionHeader}>
+                    <input
+                      type="checkbox"
+                      checked={selectedQuestions.includes(qId)}
+                      onChange={() => toggleSelect(qId)}
+                      className={styles.checkbox}
+                    />
+                    <span className={styles.questionText}>{q.enunciado}</span>
+                  </div>
 
-                <span className={styles.difficultyBadge}>
-                  {q.nivel_de_dificuldade}
-                </span>
-              </label>
-            ))
+                  <span className={styles.difficultyBadge}>
+                    {q.nivel_de_dificuldade}
+                  </span>
+                </label>
+              );
+            })
           )}
         </div>
 
-
         <div className={styles.modalActions}>
-          <button className={`${styles.modalBtn} ${styles.modalCancel}`} onClick={close}>
+          <button
+            className={`${styles.modalBtn} ${styles.modalCancel}`}
+            onClick={close}
+          >
             Cancelar
           </button>
 

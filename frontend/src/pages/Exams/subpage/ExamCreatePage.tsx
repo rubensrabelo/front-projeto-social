@@ -25,7 +25,7 @@ export default function ExamCreatePage() {
     hora_a_ser_liberada: "",
     banco_questao_id: 0,
     questoes_id: [],
-    metodo_de_selecao_de_ap: "",
+    metodo_de_selecao_de_ap: "manual",
   };
 
   const [exam, setExam] = useState<Exam>(emptyExam);

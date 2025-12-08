@@ -1,5 +1,5 @@
 export interface Exam {
-  id?: number | null;
+  id?: string;
   titulo: string;
   quantidade_questoes: number;
   turmas: number[];
