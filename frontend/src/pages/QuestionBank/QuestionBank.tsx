@@ -4,7 +4,7 @@ import styles from "./QuestionBank.module.css";
 
 import { createQuestionBank } from "../../api/services/QuestionBank/CreateQuestionBankService";
 import { GetAllQuestionBankService } from "../../api/services/QuestionBank/GetAllQuestionBankService";
-import QuestionBankCard from "./components/QuestionBankCard";
+import QuestionBankTable from "./components/QuestionBankTable";
 import { getUserSession } from "../../utils/session/getUserSession";
 
 export default function QuestionBank() {
@@ -70,12 +70,6 @@ export default function QuestionBank() {
     }
   }
 
-  function openQuestions(bank: any) {
-    navigate("/questoes", {
-      state: { bank }
-    });
-  }
-
   return (
     <div className={styles.container}>
       <button
@@ -91,11 +85,11 @@ export default function QuestionBank() {
         + Criar Banco de Questões
       </button>
 
-      <div className={styles.list}>
+      <div className={styles.table}>
         {banks.length === 0 && <p>Nenhum banco criado ainda.</p>}
-        {banks.map((b) => (
-          <QuestionBankCard key={b.id} bank={b} onClick={() => openQuestions(b)} />
-        ))}
+
+        <QuestionBankTable bank={banks} />
+
       </div>
 
       {creating && (
@@ -126,7 +120,9 @@ export default function QuestionBank() {
             >
               <option value="Matemática">Matemática</option>
               <option value="Linguagens">Linguagens</option>
-              <option value="Técnicas">Técnicas</option>
+              <option value="Base Técnica">Base Técnica</option>
+              <option value="Ciências Humanas">Ciências Humanas</option>
+              <option value="Ciências da Natureza">Ciências da Natureza</option>
             </select>
 
             {error && <p className={styles.errorMessage}>{error}</p>}
