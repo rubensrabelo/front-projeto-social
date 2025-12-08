@@ -31,7 +31,7 @@ export default function ExamCreatePage() {
   const [exam, setExam] = useState<Exam>(emptyExam);
   const [questionBanks, setQuestionBanks] = useState<any[]>([]);
 
-  // Carrega bancos de questões
+  // Carrega bancos
   useEffect(() => {
     const loadBanks = async () => {
       try {
@@ -39,13 +39,13 @@ export default function ExamCreatePage() {
         const banks = await GetAllQuestionBankService(user.id);
         setQuestionBanks(banks);
       } catch {
-        alert("Erro ao carregar bancos de questões");
+        alert("Erro ao carregar bancos");
       }
     };
     loadBanks();
   }, []);
 
-  // Carrega exame para edição
+  // Carrega dados ao editar
   useEffect(() => {
     if (isEdit) {
       const saved = sessionStorage.getItem("editing_exam");

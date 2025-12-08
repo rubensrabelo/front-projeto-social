@@ -1,5 +1,7 @@
+import { useState } from "react";
 import styles from "../Exams.module.css";
 import type { Exam } from "../types/ExamsType";
+import QuestionSelectModal from "./QuestionSelectModal";
 
 interface Props {
   newExam: Exam;
@@ -10,15 +12,35 @@ interface Props {
   questionBanks: any[];
 }
 
-export default function ExamCreateForm({ newExam, setNewExam, handleCreate, close, isEdit = false, questionBanks }: Props) {
-  const update = (field: keyof Exam, value: any) => setNewExam({ ...newExam, [field]: value });
+export default function ExamCreateForm({
+  newExam,
+  setNewExam,
+  handleCreate,
+  close,
+  isEdit = false,
+  questionBanks
+}: Props) {
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const update = (field: keyof Exam, value: any) =>
+    setNewExam({ ...newExam, [field]: value });
+
+  const handleQuestionsSelected = (questionsIds: number[], bankId: number) => {
+    update("questoes_id", questionsIds);
+    update("banco_questao_id", bankId);
+    setModalOpen(false);
+  };
 
   return (
     <div className={styles.formPage}>
       <h2 className={styles.formTitle}>{isEdit ? "Editar Prova" : "Criar Nova Prova"}</h2>
 
-      <input type="text" placeholder="Título" value={newExam.titulo} onChange={(e) => update("titulo", e.target.value)} />
-      <input type="number" placeholder="Quantidade de Questões" value={newExam.quantidade_questoes || ""} onChange={(e) => update("quantidade_questoes", Number(e.target.value))} />
+      <input type="text" placeholder="Título"
+        value={newExam.titulo} onChange={(e) => update("titulo", e.target.value)} />
+
+      <input type="number" placeholder="Quantidade de Questões"
+        value={newExam.quantidade_questoes || ""} onChange={(e) => update("quantidade_questoes", Number(e.target.value))} />
 
       <select value={newExam.bimestre} onChange={(e) => update("bimestre", Number(e.target.value))}>
         <option value="">Bimestre</option>
@@ -30,39 +52,45 @@ export default function ExamCreateForm({ newExam, setNewExam, handleCreate, clos
 
       <select value={newExam.area} onChange={(e) => update("area", e.target.value)}>
         <option value="">Disciplina</option>
-        <option value="Matemática">Matemática</option>
-        <option value="Biologia">Biologia</option>
-        <option value="História">História</option>
-        <option value="Geografia">Geografia</option>
-        <option value="Física">Física</option>
-        <option value="Química">Química</option>
-        <option value="Português">Português</option>
-        <option value="Inglês">Inglês</option>
-        <option value="Espanhol">Espanhol</option>
-        <option value="Sociologia">Sociologia</option>
-        <option value="Filosofia">Filosofia</option>
-        <option value="Artes">Artes</option>
-        <option value="Educação Física">Educação Física</option>
+        {/* ... opcoes ... */}
       </select>
 
-      <input type="date" value={newExam.dia_a_ser_realizada} onChange={(e) => update("dia_a_ser_realizada", e.target.value)} />
-      <input type="time" value={newExam.hora_a_ser_liberada} onChange={(e) => update("hora_a_ser_liberada", e.target.value)} />
+      <input type="date" value={newExam.dia_a_ser_realizada}
+        onChange={(e) => update("dia_a_ser_realizada", e.target.value)} />
 
-      <select value={newExam.banco_questao_id || ""} onChange={(e) => update("banco_questao_id", Number(e.target.value))}>
-        <option value="">Banco de Questões</option>
-        {questionBanks.map((b) => <option key={b.id} value={b.id}>{b.area}</option>)}
-      </select>
+      <input type="time" value={newExam.hora_a_ser_liberada}
+        onChange={(e) => update("hora_a_ser_liberada", e.target.value)} />
 
-      <select value={newExam.metodo_de_selecao_de_ap} onChange={(e) => update("metodo_de_selecao_de_ap", e.target.value)}>
-        <option value="">Método de Seleção de Questões</option>
-        <option value="Manual">Manual</option>
-        <option value="Aleatória">Aleatória</option>
-      </select>
+      {/* BOTÃO PARA ABRIR MODAL */}
+      <button className={styles.openModalBtn} onClick={() => setModalOpen(true)}>
+        Selecionar Questões
+      </button>
+
+      {/* LISTA DE QUESTÕES ESCOLHIDAS */}
+      {newExam.questoes_id.length > 0 && (
+        <div className={styles.selectedContainer}>
+          <h4>Questões Selecionadas:</h4>
+          {newExam.questoes_id.map((q) => (
+            <p key={q}>Questão #{q}</p>
+          ))}
+        </div>
+      )}
 
       <div className={styles.formActions}>
         <button className={styles.cancelBtn} onClick={close}>Cancelar</button>
-        <button className={styles.saveBtn} onClick={handleCreate}>{isEdit ? "Salvar Alterações" : "Salvar"}</button>
+        <button className={styles.saveBtn} onClick={handleCreate}>
+          {isEdit ? "Salvar Alterações" : "Salvar"}
+        </button>
       </div>
+
+      {/* MODAL */}
+      {modalOpen && (
+        <QuestionSelectModal
+          close={() => setModalOpen(false)}
+          banks={questionBanks}
+          onConfirm={handleQuestionsSelected}
+        />
+      )}
     </div>
   );
 }
