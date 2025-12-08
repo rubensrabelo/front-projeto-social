@@ -13,6 +13,7 @@ import ManageTeacher from "../pages/Teacher/ManageTeacher";
 import StudentsHome from "../pages/Students/StudentsHome";
 import AnswerExam from "../pages/Students/AnswerExams";
 import ExamResult from "../pages/Students/ExamResult";
+import ExamCreatePage from "../pages/Exams/subpage/ExamCreatePage";
 
 function AppRouter() {
     return (
@@ -29,6 +30,8 @@ function AppRouter() {
                     <Route path="gerenciar_professores" element={<ManageTeacher />} />
                     <Route path="questoes" element={<Questions />} />
                     <Route path="exams" element={<Exams />} />
+                    <Route path="exams/create" element={<ExamCreatePage />} />
+                    <Route path="exams/edit/:id" element={<ExamCreatePage />} />
                     <Route path="turmas" element={<Turmas />} />
                     <Route path="turmas/:id" element={<TurmaDetails />} />
                     <Route path="student" element={<StudentsHome />} />
