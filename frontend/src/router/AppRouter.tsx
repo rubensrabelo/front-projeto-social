@@ -5,7 +5,7 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import Home from "../pages/Home/Home";
 import ProtectedLayout from "../Layout/ProtectedLayout";
 import Questions from "../pages/Questions/Questions";
-import QuestionBank from "../pages/QuestionBank/QuestionBank";
+import QuestionBanks from "../pages/QuestionBank/QuestionBank";
 import Exams from "../pages/Exams/Exams";
 import Turmas from "../pages/Turma/Turmas";
 import TurmaDetails from "../pages/Turma/subpage/TurmaDetails/TurmaDetails";
@@ -26,7 +26,7 @@ function AppRouter() {
 
                 <Route path="/" element={<ProtectedLayout />}>
                     <Route path="home" element={<Home />} />
-                    <Route path="banco_de_questoes" element={<QuestionBank />} />
+                    <Route path="banco_de_questoes" element={<QuestionBanks />} />
                     <Route path="gerenciar_professores" element={<ManageTeacher />} />
                     <Route path="questoes" element={<Questions />} />
                     <Route path="exams" element={<Exams />} />

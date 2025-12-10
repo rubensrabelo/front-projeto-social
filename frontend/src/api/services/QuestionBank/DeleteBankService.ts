@@ -2,13 +2,13 @@ import ENV from "../../../config/envConfig.ts";
 import { AuthError } from "../../errors/AuthError.ts";
 import { parseErrorResponse } from "../../utils/parseErrorResponse.ts";
 
-export async function createQuestionBank(id_teacher: string, body: any) {
-    const url = `${ENV.API_BASE_URL}/professores/${id_teacher}/banco_questoes?`;
+export async function DeleteBankService(teacher_id: string, bank_id: number) {
+
+    const url = `${ENV.API_BASE_URL}/professores/${teacher_id}/banco_questoes/${bank_id}`;
 
     const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
     });
 
     if (!response.ok) {
@@ -18,4 +18,3 @@ export async function createQuestionBank(id_teacher: string, body: any) {
 
     return await response.json();
 }
-

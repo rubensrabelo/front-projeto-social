@@ -107,11 +107,13 @@ export default function Questions() {
         + Criar Questão
       </button>
 
-      <QuestionsTable
-        questions={questions}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <div className={styles.tableWrapper}>
+        <QuestionsTable
+          questions={questions}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
 
       {creating && (
         <QuestionCreateForm

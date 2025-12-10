@@ -7,7 +7,7 @@ import QuestionIcon from "../../assets/QuestionIcon";
 import ExamIcon from "../../assets/ExamIcon";
 import TeacherIcon from "../../assets/TeacherIcon";
 import SchoolClassIcon from "../../assets/SchoolClassIcon";
-import HistogramIcon from "../../assets/histogramIcon";
+import HistogramIcon from "../../assets/HistogramIcon";
 
 export default function Home() {
   const [searchParams] = useSearchParams();

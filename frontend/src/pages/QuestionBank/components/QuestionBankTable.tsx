@@ -1,16 +1,16 @@
 import styles from "../QuestionBank.module.css";
 import { useNavigate } from "react-router-dom";
+import type { Bank } from "../types/BankType";
 
 
-export default function BankQuestionsTable({ bank, onEdit, onDelete }: any) {
+export default function BankQuestionsTable({ banks, onEdit, onDelete }: any) {
 
   const navigate = useNavigate();
-  console.log(bank);
 
   function openQuestions(bank: any) {
     navigate("/questoes", {
       state: { bank }
-    }); 
+    });
   }
 
   return (
@@ -19,29 +19,29 @@ export default function BankQuestionsTable({ bank, onEdit, onDelete }: any) {
         <tr>
           <th>ID</th>
           <th>Área</th>
-          <th>Ano</th>
+          <th>Série</th>
           <th>Bimestre</th>
           <th>Detalhes</th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody>
-        {bank.map((b: any) => (
-          <tr key={b.id}>
+        {banks.map((b: Bank, index: number) => (
+          <tr key={b.id ?? index}>
             <td>{b.id}</td>
             <td>{b.area}</td>
             <td>{b.ano}</td>
             <td>{b.bimestre}</td>
             <td>
               <button
-                  className={styles.confirmBtn}
+                  className={styles.detailBtn}
                   onClick={() => openQuestions(b)}
               >
                   Ver Detalhes
               </button>
             </td>
             <td>
-              <button className={styles.editBtn} onClick={onEdit}>Editar</button>
+              <button className={styles.editBtn} onClick={() => onEdit(b)}>Editar</button>
               <button onClick={() => onDelete(b)} className={styles.deleteBtn}>Excluir</button>
             </td>
           </tr>

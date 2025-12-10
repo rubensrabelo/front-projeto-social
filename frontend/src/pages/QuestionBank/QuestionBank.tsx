@@ -2,20 +2,31 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./QuestionBank.module.css";
 
-import { createQuestionBank } from "../../api/services/QuestionBank/CreateQuestionBankService";
 import { GetAllQuestionBankService } from "../../api/services/QuestionBank/GetAllQuestionBankService";
 import QuestionBankTable from "./components/QuestionBankTable";
 import { getUserSession } from "../../utils/session/getUserSession";
+import CreateBankModal from "./components/CreateBankModal";
+import type { Bank } from "./types/BankType";
+import { CreateBankService } from "../../api/services/QuestionBank/CreateBankService";
+import { UpdateBankService } from "../../api/services/QuestionBank/UpdateBankService";
+import { DeleteBankService } from "../../api/services/QuestionBank/DeleteBankService";
+import ConfirmDialog from "../Questions/components/ConfirmDialog";
 
-export default function QuestionBank() {
+export default function QuestionBanks() {
+  const emptybank : Bank = {
+    id: undefined,
+    bimestre: 0,
+    ano: 0,
+    area: "Matemática",
+  };
+
+  const [newBank, setNewBank] = useState<Bank>(emptybank)
   const [banks, setBanks] = useState<any[]>([]);
   const [creating, setCreating] = useState(false);
+  const [editing , setEditing] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deletingBank, setDeletingBank] = useState<Bank | null>(null);
 
-  const [form, setForm] = useState({
-    bimestre: "",
-    ano: "",
-    area: "Matemática",
-  });
 
   const [error, setError] = useState("");
 
@@ -36,37 +47,93 @@ export default function QuestionBank() {
         }
       } catch (err: any) {
         setError(err.message || "Erro ao carregar bancos.");
+        alert(error)
       }
     }
     loadBanks();
   }, [id_professor]);
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }
-
+  
+  // Cria o novo banco de questões
   async function handleCreate() {
-    if (!form.bimestre || !form.ano || !form.area) {
+    
+    if (!newBank.bimestre || !newBank.ano) {
       setError("Preencha todos os campos!");
+      alert("Por favor, preencha todos os campos")
       return;
     }
 
     try {
       const body = {
-        bimestre: Number(form.bimestre),
-        ano: Number(form.ano),
-        area: form.area,
+        bimestre: newBank.bimestre,
+        ano: newBank.ano,
+        area: newBank.area,
       };
 
-      const created = await createQuestionBank(id_professor, body);
+      const created = await CreateBankService(id_professor, body);
 
       setBanks((prev) => [...prev, created]);
       setCreating(false);
-      setForm({ bimestre: "", ano: "", area: "Matemática" });
+      setNewBank(emptybank);
 
     } catch (err: any) {
       setError(err.message || "Erro ao criar banco.");
+      alert("Erro ao criar banco.");
+    }
+  }
+  // Edita o Banco de questões
+  async function handleEdit () {
+    const user = getUserSession()
+      
+    if (!newBank.bimestre || !newBank.ano) {
+      setError("altere um  dos campos!");
+      alert("altere um dos campos!")
+      return;
+    }
+
+    try {
+      const body = {
+        bimestre: Number(newBank.bimestre),
+        ano: Number(newBank.ano),
+        area: newBank.area,
+      };
+      // atualiza o banco 
+      const updated = await UpdateBankService(user.id, newBank.id!, body);
+      // pega os valores atualizados
+      const updatedBank = updated.banco_questoes
+
+
+      setBanks(prev=>
+        prev.map(b => (b.id === newBank.id ? updatedBank : b)) // atualiza o registro do banco localmente
+      );
+      setEditing(false);
+      setNewBank(emptybank);
+
+    } catch (err: any) {
+      setError(err.message || "Erro ao editar o banco.");
+    }
+  };
+
+  // Deleta um banco de questões
+  function onDelete(bank: Bank) {
+    setDeletingBank(bank); // guarda o banco que será deletado
+    setDeleting(true);     // abre o modal de confirmação
+  }
+
+  async function handleDelete() {
+    const user = getUserSession();
+    if (!user?.id || !deletingBank) return;
+
+    try {
+      // Chama a API para deletar o banco
+      await DeleteBankService(user.id, deletingBank.id!);
+
+      // Atualiza a lista de bancos localmente sem recarregar a página
+      setBanks(prev => prev.filter(b => b.id !== deletingBank.id));
+      setDeleting(false)
+
+    } catch (err: any) {
+      setError(err.message || "Erro ao excluir banco.");
+      alert(error)
     }
   }
 
@@ -85,58 +152,48 @@ export default function QuestionBank() {
         + Criar Banco de Questões
       </button>
 
-      <div className={styles.table}>
+      <div className={styles.tableWrapper}>
         {banks.length === 0 && <p>Nenhum banco criado ainda.</p>}
 
-        <QuestionBankTable bank={banks} />
+        <QuestionBankTable banks={banks} 
+        onEdit={(bank : Bank) => {
+          setNewBank({
+            ...bank,
+            bimestre: bank.bimestre,
+            ano: bank.ano,
+          });
+          setEditing(true);}}
+        onDelete={onDelete}
+        />
 
       </div>
 
       {creating && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalBox}>
-            <h2 className={styles.modalTitle}>Criar Banco de Questões</h2>
+        <CreateBankModal
+            bank={newBank}
+            setNewBank={setNewBank}
+            handleSubmit={handleCreate}
+            close={() => {setCreating(false); setNewBank(emptybank)} }
+            isEdit={false}
+        />
+      )}
 
-            <input
-              name="ano"
-              placeholder="Ano"
-              type="number"
-              value={form.ano}
-              onChange={handleChange}
-            />
-
-            <input
-              name="bimestre"
-              placeholder="Bimestre"
-              type="number"
-              value={form.bimestre}
-              onChange={handleChange}
-            />
-
-            <select
-              name="area"
-              value={form.area}
-              onChange={handleChange}
-            >
-              <option value="Matemática">Matemática</option>
-              <option value="Linguagens">Linguagens</option>
-              <option value="Base Técnica">Base Técnica</option>
-              <option value="Ciências Humanas">Ciências Humanas</option>
-              <option value="Ciências da Natureza">Ciências da Natureza</option>
-            </select>
-
-            {error && <p className={styles.errorMessage}>{error}</p>}
-
-            <div className={styles.modalActions}>
-              <button className={styles.modalCancel} onClick={() => setCreating(false)}>
-                Cancelar
-              </button>
-              <button className={styles.modalSave} onClick={handleCreate}>
-                Salvar
-              </button>
-            </div>
-          </div>
-        </div>
+      {editing && (
+        <CreateBankModal
+            bank={newBank}
+            setNewBank={setNewBank}
+            handleSubmit={handleEdit}
+            close={() => {setEditing(false); setNewBank(emptybank)} }
+            isEdit={true}
+        />
+      )}
+      {deleting && (
+        <ConfirmDialog
+          title="Excluir Banco de questões"
+          message={"Tem certeza que deseja excluir esse banco? Esta operação é irreversível"}
+          onConfirm={handleDelete}
+          onCancel={() => setDeleting(false)}
+        />
       )}
     </div>
   );
