@@ -52,9 +52,9 @@ export default function SchoolClassSelectModal({ close, onConfirm }: Props) {
                   </span>
                 </div>
 
-                <span className={styles.difficultyBadge}>
+                {/* <span className={styles.difficultyBadge}>
                   {t.alunos.length} alunos
-                </span>
+                </span> */}
               </label>
             ))
           )}
