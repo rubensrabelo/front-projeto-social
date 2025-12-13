@@ -13,20 +13,22 @@ export default function ExamTable({ exams, handleDelete, startEdit }: Props) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Bimestre</th>
             <th>Título</th>
-            <th>Disciplina</th>
+            <th>Área</th>
+            <th>Qtde Questões</th>
+            <th>Bimestre</th>
+            <th>Data de Realização</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           {exams.map((e) => (
             <tr key={e.id}>
-              <td>{e.id}</td>
-              <td>{e.bimestre}</td>
               <td>{e.titulo}</td>
               <td>{e.area}</td>
+              <td>{e.quantidade_questoes}</td>
+              <td>{e.bimestre}</td>
+              <td>{e.dia_a_ser_realizada}</td>
               <td>
                 <button className={styles.editBtn} onClick={() => startEdit(e)}>Editar</button>
                 <button className={styles.deleteBtn} onClick={() => handleDelete(e.id!)}>Excluir</button>
