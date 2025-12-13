@@ -11,6 +11,8 @@ import { GetAllQuestionService } from "../../api/services/questions/GetAllQuesti
 import { CreateQuestionService } from "../../api/services/questions/CreateQuestionService";
 import { DeleteQuestionService } from "../../api/services/questions/DeletelQuestionService";
 import ConfirmDialog from "./components/ConfirmDialog";
+import { UpdateQuestionService } from "../../api/services/questions/UpdateQuestionService";
+import { GetQuestionService } from "../../api/services/questions/GetQuestionService";
 
 export default function Questions() {
   const navigate = useNavigate();
@@ -63,9 +65,47 @@ export default function Questions() {
     setCreating(false);
   };
 
-  async function handleEdit() {
-    alert("Edição habilitada.");
-  };
+  async function handleEdit(selectedQuestion: Question) {
+    if (!selectedQuestion.id) return;
+
+    try {
+      const fullQuestion = await GetQuestionService(
+        bank.professor_id,
+        bank.id,
+        Number(selectedQuestion.id)
+      );
+
+      setQuestion(fullQuestion);
+      setEditing(true);
+    } catch (error) {
+      alert("Erro ao carregar a questão!");
+      console.error(error);
+    }
+  }
+
+
+  async function handleUpdate() {
+    if (!question.id) return;
+
+    try {
+      await UpdateQuestionService(
+        bank.professor_id,
+        bank.id,
+        Number(question.id),
+        question
+      );
+
+      const result = await GetAllQuestionService(bank.professor_id, bank.id);
+      setQuestions(result);
+
+      setQuestion(emptyQuestion);
+      setEditing(false);
+    } catch (error) {
+      alert("Erro ao atualizar questão!");
+      console.error(error);
+    }
+  }
+
 
   function handleDelete(question: Question) {
     setQuestionToDelete(question);
@@ -128,7 +168,7 @@ export default function Questions() {
         <QuestionCreateForm
           question={question}
           setQuestion={setQuestion}
-          handleSubmit={handleEdit}
+          handleSubmit={handleUpdate}
           close={() => setEditing(false)}
           isEdit
         />
