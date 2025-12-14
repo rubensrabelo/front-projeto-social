@@ -3,11 +3,11 @@ import type { Teacher } from "../types/Teacher";
 
 interface Props {
     teacher: Teacher[]
-    // handleDelete: (id: string) => void;
-    // startEdit: (t: Teacher) => void;
+    handleDelete: (t: Teacher) => void;
+    startEdit: (t: Teacher) => void;
 }
 
-export default function TeacherTable({ teacher }: Props) {
+export default function TeacherTable({ teacher, handleDelete, startEdit }: Props) {
     return (
         <div className={styles.tableWrapper}>
             <table className={styles.table}>
@@ -16,6 +16,7 @@ export default function TeacherTable({ teacher }: Props) {
                         <th>Nome</th>
                         <th>Matrícula</th>
                         <th>Matéria Ensinada</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
 
@@ -25,6 +26,21 @@ export default function TeacherTable({ teacher }: Props) {
                             <td>{e.nome}</td>
                             <td>{e.matricula}</td>
                             <td>{e.materia_ensinada}</td>
+                            <td>
+                                <button
+                                    className={styles.editBtn}
+                                    onClick={() => startEdit(e)}
+                                >
+                                    Editar
+                                </button>
+
+                                <button
+                                    className={styles.deleteBtn}
+                                    onClick={() => handleDelete(e)}
+                                >
+                                    Excluir
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

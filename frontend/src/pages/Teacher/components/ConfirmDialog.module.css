@@ -1,0 +1,78 @@
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  z-index: 200;
+}
+
+.confirmBox {
+  width: 400px;
+  max-width: 92%;
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 20px;
+  animation: slideIn 0.22s ease forwards;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: "Poppins", sans-serif;
+}
+
+.confirmBox h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #024e45;
+}
+
+.confirmBox p {
+  font-size: 15px;
+  color: #2f3d37;
+  white-space: pre-line;
+  line-height: 1.4rem;
+}
+
+.confirmButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.confirmBtn {
+  padding: 10px 24px;
+  background: #004940;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.22s ease;
+}
+
+.confirmBtn:hover {
+  background: #008f7b;
+}
+
+.cancelBtn {
+  padding: 10px 24px;
+  background: #e4e7e7;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.22s ease;
+}
+
+.cancelBtn:hover {
+  background: #cfd3d3;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

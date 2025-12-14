@@ -7,6 +7,9 @@ import TeacherTable from "./components/TeacherTable";
 import { getUserSession } from "../../utils/session/getUserSession";
 import { GetAllTeacherService } from "../../api/services/teacher/GetAllTeacherService";
 import { CreateTeacherService } from "../../api/services/teacher/CreateTeacherService";
+import { UpdateTeacherService } from "../../api/services/teacher/UpdateTeacherService";
+import { DeleteTeacherService } from "../../api/services/teacher/DeleteTeacherService";
+import ConfirmDeleteTurma from "./components/ConfirmDialog";
 
 export default function ManageTeacher() {
     const navigate = useNavigate();
@@ -20,25 +23,29 @@ export default function ManageTeacher() {
 
     const [teacher, setTeacher] = useState<Teacher[]>([]);
     const [creating, setCreating] = useState(false);
+    const [editing, setEditing] = useState(false);
     const [newTeacher, setNewTeacher] = useState<Teacher>(emptyTeacher);
 
-    useEffect(() => {
-        async function loadTeacher() {
-            try {
-                const data = getUserSession();
-                const teacherApi = await GetAllTeacherService(data.id);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [teacherToDelete, setTeacherToDelete] = useState<Teacher | null>(null);
 
-                setTeacher(teacherApi);
-            } catch (err) {
-                alert("Erro ao carregar professores.")
-            }
+    async function loadTeacher() {
+        try {
+            const data = getUserSession();
+            const teacherApi = await GetAllTeacherService(data.id);
+
+            setTeacher(teacherApi);
+        } catch (err) {
+            alert("Erro ao carregar professores.")
         }
+    }
 
+    useEffect(() => {
         loadTeacher();
     }, []);
 
     async function handleCreate() {
-        if(!newTeacher.nome || !newTeacher.matricula) {
+        if (!newTeacher.nome || !newTeacher.matricula) {
             alert("Preencha todos os campos.");
             return;
         }
@@ -63,6 +70,49 @@ export default function ManageTeacher() {
         }
     }
 
+    const startEdit = (teacher: Teacher) => {
+        setNewTeacher(teacher);
+        setEditing(true);
+    };
+
+    const handleEdit = async () => {
+        if (!newTeacher.id) return alert("Erro: turma sem ID");
+
+        const data = getUserSession();
+
+        const payload = {
+            nome: newTeacher.nome,
+            matricula: newTeacher.matricula,
+            materia_ensinada: newTeacher.materia_ensinada,
+        };
+
+        await UpdateTeacherService(data.id, newTeacher.id, payload);
+        await loadTeacher();
+        setEditing(false);
+        setNewTeacher(emptyTeacher);
+    };
+
+    // DELETE
+    const handleDelete = (teacher: Teacher) => {
+        setTeacherToDelete(teacher);
+        setConfirmOpen(true);
+    };
+
+    async function confirmDeletion() {
+        if (!teacherToDelete?.id) return;
+
+        try {
+            const data = getUserSession();
+            await DeleteTeacherService(data.id, teacherToDelete.id);
+            setTeacher(prev => prev.filter(t => t.id !== teacherToDelete.id));
+        } catch (error) {
+            alert("Erro ao deletar turma!");
+        }
+
+        setConfirmOpen(false);
+        setTeacherToDelete(null);
+    }
+
     return (
         <div className={styles.container}>
             <button
@@ -83,16 +133,37 @@ export default function ManageTeacher() {
 
             {creating && (
                 <TeacherCreateForm
-                newTeacher={newTeacher}
-                setNewTeacher={setNewTeacher}
-                handleCreate={handleCreate}
-                close={() => setCreating(false)}
-                 />
+                    newTeacher={newTeacher}
+                    setNewTeacher={setNewTeacher}
+                    handleCreate={handleCreate}
+                    close={() => setCreating(false)}
+                />
             )}
 
             <TeacherTable
-            teacher={teacher}
+                teacher={teacher}
+                handleDelete={handleDelete}
+                startEdit={startEdit}
             />
+
+            {editing && (
+                <TeacherCreateForm
+                    newTeacher={newTeacher}
+                    setNewTeacher={setNewTeacher}
+                    handleCreate={handleEdit}
+                    close={() => setEditing(false)}
+                    isEdit
+                />
+            )}
+
+
+            {confirmOpen && (
+                <ConfirmDeleteTurma
+                    teacherName={teacherToDelete?.nome}
+                    onConfirm={confirmDeletion}
+                    onCancel={() => setConfirmOpen(false)}
+                />
+            )}
         </div>
     );
 }
