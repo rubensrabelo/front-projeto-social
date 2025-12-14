@@ -55,6 +55,8 @@ export default function Turmas() {
       turma: {
         ano: newTurma.ano,
         curso: newTurma.curso,
+        alunos: [],
+        professores: [],
       },
       professores_id: newTurma.professores || [],
     };
@@ -76,7 +78,7 @@ export default function Turmas() {
 
     const payload = {
       ano: newTurma.ano,
-      curso: newTurma.curso,
+      curso: newTurma.curso
     };
 
     await UpdateSchoolClassService(user.id, Number(newTurma._id), payload);
