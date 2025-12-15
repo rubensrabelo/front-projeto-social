@@ -50,9 +50,9 @@ export default function TurmaCreateForm({
             <option value="Enfermagem">Enfermagem</option>
             <option value="Informática">Informática</option>
           </select>
+          {error && <p className={styles.errorMessage}>{error}</p>}
         </div>
 
-        {error && <p className={styles.errorMessage}>{error}</p>}
 
         <div className={styles.modalActions}>
           <button className={styles.modalCancel} onClick={close}>

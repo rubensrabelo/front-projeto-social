@@ -6,6 +6,7 @@ interface props {
     newTeacher: Teacher,
     setNewTeacher: (e: Teacher) => void,
     handleCreate: () => void,
+    error: string,
     close: () => void,
     isEdit?: boolean,
 }
@@ -14,6 +15,7 @@ export default function TeacherCreateForm({
     newTeacher,
     setNewTeacher,
     handleCreate,
+    error,
     close,
     isEdit = false,
 }: props) {
@@ -60,7 +62,9 @@ export default function TeacherCreateForm({
                         <option value="História">História</option>
                         <option value="Geografia">Geografia</option>
                     </select>
+                    {error && <p className={styles.errorMessage}>{error}</p>}
                 </div>
+
 
                 <div className={styles.modalActions}>
                     <button className={styles.modalCancel} onClick={close}>

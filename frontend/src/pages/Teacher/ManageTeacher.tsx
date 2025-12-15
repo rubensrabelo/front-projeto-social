@@ -28,6 +28,7 @@ export default function ManageTeacher() {
 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [teacherToDelete, setTeacherToDelete] = useState<Teacher | null>(null);
+    const [error, setError] = useState<string>("");
 
     async function loadTeacher() {
         try {
@@ -36,7 +37,7 @@ export default function ManageTeacher() {
 
             setTeacher(teacherApi);
         } catch (err) {
-            alert("Erro ao carregar professores.")
+            setError("Erro ao carregar professores.")
         }
     }
 
@@ -46,7 +47,7 @@ export default function ManageTeacher() {
 
     async function handleCreate() {
         if (!newTeacher.nome || !newTeacher.matricula) {
-            alert("Preencha todos os campos.");
+            setError("Preencha todos os campos.");
             return;
         }
 
@@ -66,7 +67,7 @@ export default function ManageTeacher() {
             setNewTeacher(emptyTeacher);
             setCreating(false);
         } catch (err) {
-            alert("Erro ao criar o professor");
+            setError("Erro ao criar o professor");
         }
     }
 
@@ -76,7 +77,7 @@ export default function ManageTeacher() {
     };
 
     const handleEdit = async () => {
-        if (!newTeacher.id) return alert("Erro: turma sem ID");
+        if (!newTeacher.id) return setError("Erro: turma sem ID");
 
         const data = getUserSession();
 
@@ -106,7 +107,7 @@ export default function ManageTeacher() {
             await DeleteTeacherService(data.id, teacherToDelete.id);
             setTeacher(prev => prev.filter(t => t.id !== teacherToDelete.id));
         } catch (error) {
-            alert("Erro ao deletar turma!");
+            setError("Erro ao deletar turma!");
         }
 
         setConfirmOpen(false);
@@ -136,7 +137,8 @@ export default function ManageTeacher() {
                     newTeacher={newTeacher}
                     setNewTeacher={setNewTeacher}
                     handleCreate={handleCreate}
-                    close={() => setCreating(false)}
+                    error={error}
+                    close={() => {setError(""), setCreating(false)}}
                 />
             )}
 
@@ -151,7 +153,8 @@ export default function ManageTeacher() {
                     newTeacher={newTeacher}
                     setNewTeacher={setNewTeacher}
                     handleCreate={handleEdit}
-                    close={() => setEditing(false)}
+                    error={error}
+                    close={() => {setError(""), setEditing(false)}}
                     isEdit
                 />
             )}
