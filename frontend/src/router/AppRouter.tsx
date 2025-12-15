@@ -21,8 +21,7 @@ function AppRouter() {
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/recuper_a_senha" element={<ForgotPassword />} />
-
+                <Route path="/recuper-senha" element={<ForgotPassword />} />
 
                 <Route path="/" element={<ProtectedLayout />}>
                     <Route path="home" element={<Home />} />

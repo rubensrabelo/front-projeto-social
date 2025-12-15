@@ -25,7 +25,7 @@ export default function Login() {
     senha: "",
   });
 
-  const [ error, setError] = useState("");
+  const [error, setError] = useState("");
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -45,7 +45,7 @@ export default function Login() {
         const user = await getAluno(data, "alunos");
         saveUserSession(user);
         navigate(`/student`);
-        
+
         return;
       }
 
@@ -100,20 +100,26 @@ export default function Login() {
           </>
         )}
 
-        { error && <p className={styles.errorMessage}>{error}</p>}
+        {error && <p className={styles.errorMessage}>{error}</p>}
 
         <button className={styles.submitButton} onClick={handleSubmit}>
           Entrar
         </button>
 
         {type !== "alunos" && (
-          <div className={styles.forgotPassword}>
-            <Link to={`/recuper_a_senha?type=${type}`}>
+          <div className={styles.linksLogin}>
+            <Link to={`/recuper-senha?type=${type}`}>
               Esqueceu sua senha?
             </Link>
           </div>
         )}
+
+        <div className={styles.linksLogin}>
+          <Link to={`/`}>
+            ⬅ Voltar
+          </Link>
+        </div>
       </div>
-    </div>
+    </div >
   );
 }
