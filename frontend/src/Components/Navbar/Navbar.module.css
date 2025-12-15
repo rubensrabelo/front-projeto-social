@@ -10,47 +10,34 @@
 
   padding: 0 26px;
   box-shadow: 0px 2px 8px rgba(0,0,0,0.15);
-
-  /* permitir que itens ajustem espaçamento em telas pequenas */
-  flex-wrap: nowrap;
 }
 
-/* conteúdo à esquerda */
 .left {
   display: flex;
   align-items: center;
   gap: 18px;
 }
 
-/* logo */
 .logo {
   width: 42px;
-  height: auto;
   object-fit: contain;
-
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
 }
 
-/* nome do sistema */
 .systemName {
   font-size: 22px;
   font-weight: 700;
-  letter-spacing: 0.6px;
   font-family: "Poppins", Arial, sans-serif;
 }
 
-/* conteúdo à direita */
 .right {
   display: flex;
   align-items: center;
   gap: 18px;
-  position: relative;
 }
 
-/* ícones / perfil / seta */
 .icon,
-.profile,
-.arrow {
+.profile {
   width: 26px;
   height: 26px;
   object-fit: contain;
@@ -65,70 +52,29 @@
 }
 
 .icon:hover,
-.profile:hover,
-.arrow:hover {
-  transform: scale(1.18);
+.profile:hover {
+  transform: scale(1.15);
   opacity: 0.9;
 }
 
-.dropdownMenu {
-  position: absolute;
-  top: 70px;
-  right: 0;
-  z-index: 10;
-
-  background: #ffffff;
-  color: #004940;
-
-  border-radius: 10px;
-  width: 170px;
-
-  display: flex;
-  flex-direction: column;
-
-  padding: 8px 0;
-
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-
-  animation: fadeIn 0.18s ease-out;
-}
-
-.dropdownMenu button {
+.iconButton {
   background: none;
   border: none;
-
-  padding: 12px 18px;
-  width: 100%;
-
-  text-align: left;
-  font-size: 15px;
-  color: #004940;
-
+  padding: 0;
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  transition: background 0.15s ease;
 }
 
-.dropdownMenu button:hover {
-  background: #ddffe6;
+.iconButton:hover .icon {
+  transform: scale(1.15);
+  opacity: 0.9;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.iconButton:active .icon {
+  transform: scale(0.95);
 }
 
-/* -----------------------
-   Responsividade
-   -----------------------
-*/
-
-/* tablets / larguras médias */
 @media (max-width: 900px) {
   .navbar {
     height: 64px;
@@ -143,17 +89,8 @@
     font-size: 18px;
   }
 
-  .left {
-    gap: 12px;
-  }
-
-  .right {
-    gap: 12px;
-  }
-
   .icon,
-  .profile,
-  .arrow {
+  .profile {
     width: 24px;
     height: 24px;
   }
@@ -162,64 +99,20 @@
     width: 28px;
     height: 28px;
   }
-
-  .dropdownMenu {
-    top: 64px;
-    width: 150px;
-    right: 0;
-  }
-
-  .dropdownMenu button {
-    padding: 10px 14px;
-    font-size: 14px;
-  }
 }
 
-/* celulares */
 @media (max-width: 520px) {
   .navbar {
     height: 60px;
     padding: 0 12px;
   }
 
-  .left {
-    gap: 8px;
-  }
-
-  .logo {
-    width: 34px;
-  }
-
-  /* esconder o nome longo do sistema em telas muito pequenas para ganhar espaço */
   .systemName {
-    font-size: 16px;
     display: none;
   }
 
-  .right {
-    gap: 10px;
-  }
-
-  .icon,
-  .profile,
-  .arrow {
+  .icon {
     width: 22px;
     height: 22px;
-  }
-
-  .profile {
-    width: 26px;
-    height: 26px;
-  }
-
-  .dropdownMenu {
-    top: 60px;
-    right: 6px;
-    width: 160px; /* um pouco maior para botões com toque confortável */
-  }
-
-  .dropdownMenu button {
-    padding: 12px 14px;
-    font-size: 15px;
   }
 }
