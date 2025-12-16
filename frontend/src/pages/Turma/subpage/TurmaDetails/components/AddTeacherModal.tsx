@@ -60,12 +60,11 @@ export default function AddTeacherModal({ idClass, onClose, reload }: Props) {
                 {error && <p className={styles.errorMessage}>{error}</p>}
 
                 <div className={styles.modalButtons}>
-                    <button className={styles.confirmBtn} onClick={handleAdd}>
-                        Adicionar
-                    </button>
-
                     <button className={styles.cancelBtn} onClick={onClose}>
                         Cancelar
+                    </button>
+                    <button className={styles.confirmBtn} onClick={handleAdd}>
+                        Adicionar
                     </button>
                 </div>
             </div>
